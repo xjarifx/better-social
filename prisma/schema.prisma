@@ -48,7 +48,6 @@ model User {
   following                  Follower[] @relation("UserFollowing")
   notifications              Notification[] @relation("UserNotifications")
   triggeredNotifications     Notification[] @relation("RelatedUserNotifications")
-  refreshTokens              RefreshToken[]
   blockedUsers               Block[] @relation("UserBlocks")
   blockedBy                  Block[] @relation("BlockedUsers")
 
@@ -152,19 +151,6 @@ model Notification {
   relatedPost Post? @relation(fields: [relatedPostId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
-}
-
-model RefreshToken {
-  id        String    @id @default(uuid())
-  userId    String    @map("user_id")
-  token     String    @unique
-  expiresAt DateTime  @map("expires_at")
-  createdAt DateTime  @default(now()) @map("created_at")
-  revokedAt DateTime? @map("revoked_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("refresh_tokens")
 }
 
 model Block {

@@ -1,10 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { cache, buildCacheKey } from "@/lib/cache";
 import { AppError } from "@/lib/errors";
 import { syncUserPlanExpiration } from "@/lib/services/billing.service";
-
-const FEED_TTL_SECONDS = 30;
-const POST_TTL_SECONDS = 60;
 
 const getPlanPostLimit = (plan: string | null | undefined): number =>
   plan === "PRO" ? 100 : 20;
@@ -34,9 +30,6 @@ export async function getFeed(
 ) {
   const limit = query.limit ?? 20;
   const offset = query.offset ?? 0;
-  const cacheKey = buildCacheKey("feed", userId, limit, offset);
-  const cached = await cache.get(cacheKey);
-  if (cached) return cached;
 
   const blockedRelationships = await prisma.block.findMany({
     where: {
@@ -86,7 +79,6 @@ export async function getFeed(
   });
 
   const response = posts.map(mapPost);
-  await cache.set(cacheKey, response, FEED_TTL_SECONDS * 1000);
   return response;
 }
 
@@ -96,9 +88,6 @@ export async function getForYouFeed(
 ) {
   const limit = query.limit ?? 20;
   const offset = query.offset ?? 0;
-  const cacheKey = buildCacheKey("for-you", userId, limit, offset);
-  const cached = await cache.get(cacheKey);
-  if (cached) return cached;
 
   const blockedRelationships = await prisma.block.findMany({
     where: {
@@ -170,7 +159,6 @@ export async function getForYouFeed(
   });
 
   const response = posts.map(mapPost);
-  await cache.set(cacheKey, response, FEED_TTL_SECONDS * 1000);
   return response;
 }
 
@@ -237,10 +225,6 @@ export async function createPost(
     },
   });
 
-  await cache.invalidatePattern("feed:*");
-  await cache.invalidatePattern("for-you:*");
-  await cache.invalidatePattern(`timeline:user:${authorId}*`);
-
   return {
     id: post.id,
     content: post.content,
@@ -260,9 +244,6 @@ export async function getPostById(
 ) {
   const { postId } = params;
   const requesterId = userId || "anon";
-  const cacheKey = buildCacheKey("post", postId, "viewer", requesterId);
-  const cached = await cache.get(cacheKey);
-  if (cached) return cached;
 
   const post = await prisma.post.findUnique({
     where: { id: postId },
@@ -332,7 +313,6 @@ export async function getPostById(
     updatedAt: post.updatedAt,
   };
 
-  await cache.set(cacheKey, response, POST_TTL_SECONDS * 1000);
   return response;
 }
 
@@ -384,11 +364,6 @@ export async function updatePost(
     },
   });
 
-  await cache.invalidatePattern(`post:${postId}*`);
-  await cache.invalidatePattern("feed:*");
-  await cache.invalidatePattern("for-you:*");
-  await cache.invalidatePattern(`timeline:user:${userId}*`);
-
   return {
     id: updatedPost.id,
     content: updatedPost.content,
@@ -413,12 +388,6 @@ export async function deletePost(
   if (post.authorId !== userId) throw new AppError("Cannot delete other user's post", 403);
 
   await prisma.post.delete({ where: { id: postId } });
-
-  await cache.invalidatePattern(`post:${postId}*`);
-  await cache.invalidatePattern(`comments:post:${postId}*`);
-  await cache.invalidatePattern("feed:*");
-  await cache.invalidatePattern("for-you:*");
-  await cache.invalidatePattern(`timeline:user:${userId}*`);
 
   return { message: "Post deleted successfully" };
 }

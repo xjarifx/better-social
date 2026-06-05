@@ -1,8 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { cache, buildCacheKey } from "@/lib/cache";
 import { AppError } from "@/lib/errors";
-
-const NOTIFICATIONS_TTL_SECONDS = 20;
 
 export async function listNotifications(
   userId: string,
@@ -10,16 +7,6 @@ export async function listNotifications(
   offset: number = 0,
   read?: boolean,
 ) {
-  const cacheKey = buildCacheKey(
-    "notifications",
-    userId,
-    read === undefined ? "all" : read,
-    limit,
-    offset,
-  );
-  const cached = await cache.get(cacheKey);
-  if (cached) return cached;
-
   const where = {
     userId,
     ...(read !== undefined ? { read } : {}),
@@ -57,15 +44,10 @@ export async function listNotifications(
     offset,
   };
 
-  await cache.set(cacheKey, response, NOTIFICATIONS_TTL_SECONDS * 1000);
   return response;
 }
 
 export async function getNotification(notificationId: string, userId: string) {
-  const cacheKey = buildCacheKey("notification", notificationId, "user", userId);
-  const cached = await cache.get(cacheKey);
-  if (cached) return cached;
-
   const notification = await prisma.notification.findFirst({
     where: { id: notificationId, userId },
     include: {
@@ -90,7 +72,6 @@ export async function getNotification(notificationId: string, userId: string) {
     relatedPost: notification.relatedPost,
   };
 
-  await cache.set(cacheKey, response, NOTIFICATIONS_TTL_SECONDS * 1000);
   return response;
 }
 
@@ -108,9 +89,6 @@ export async function updateNotification(
 
   if (count === 0) throw new AppError("Notification not found", 404);
 
-  await cache.del(`notification:${notificationId}`);
-  await cache.invalidatePattern(`notifications:user:${userId}*`);
-
   return getNotification(notificationId, userId);
 }
 
@@ -120,9 +98,6 @@ export async function deleteNotification(notificationId: string, userId: string)
   });
 
   if (count === 0) throw new AppError("Notification not found", 404);
-
-  await cache.del(`notification:${notificationId}`);
-  await cache.invalidatePattern(`notifications:user:${userId}*`);
 
   return true;
 }

@@ -24,7 +24,7 @@ All responses follow `{ success: boolean, data: T | null, error: string | null }
 
 All protected endpoints require: `Authorization: Bearer <access_token>`
 
-Access tokens are JWT-based (5 min TTL). Refresh tokens are opaque (30 day TTL) with revocation and rotation support.
+Access tokens are JWT-based.
 
 ## Endpoints
 
@@ -32,8 +32,7 @@ Access tokens are JWT-based (5 min TTL). Refresh tokens are opaque (30 day TTL) 
 |---|---|---|---|
 | POST | /auth/register | No | Create account (username, email, password, firstName, lastName) |
 | POST | /auth/login | No | Login with email/password |
-| POST | /auth/logout | Yes | Revoke refresh token |
-| POST | /auth/refresh | No | Rotate token pair |
+| POST | /auth/logout | Yes | Log out |
 | GET | /posts | Yes | Following feed (paginated) |
 | POST | /posts | Yes | Create post (multipart, optional image) |
 | GET | /posts/feed | Yes | Alias for GET /posts |
@@ -73,7 +72,7 @@ Access tokens are JWT-based (5 min TTL). Refresh tokens are opaque (30 day TTL) 
 | GET | /billing/confirm | Yes | Confirm payment after redirect |
 | POST | /billing/downgrade | Yes | Downgrade to FREE |
 | POST | /billing/webhook | Stripe sig | Stripe event webhook |
-| GET | /health/cache | No | Cache health check |
+
 
 ## Content Limits
 
@@ -87,19 +86,6 @@ Access tokens are JWT-based (5 min TTL). Refresh tokens are opaque (30 day TTL) 
 
 Paginated endpoints accept `limit` (default 20) and `offset` (default 0) and return `{ data: { ..., total, limit, offset } }`.
 
-## Caching
-
-Backend: Redis (if `REDIS_URL` set) or in-memory Map fallback.
-
-| Domain | TTL | Key Pattern |
-|---|---|---|
-| Following feed | 30s | `feed:{userId}:{limit}:{offset}` |
-| For You feed | 30s | `for-you:{userId}:{limit}:{offset}` |
-| Single post | 60s | `post:{postId}:viewer:{userId}` |
-| User profile | 120s | `user:public:{userId}` |
-| User timeline | 30s | `timeline:{userId}:{viewerId}:{limit}:{offset}` |
-| Comments | 30s | `comments:{postId}:{parentId}:{limit}:{offset}:{userId}` |
-| Notifications | 20s | `notifications:{userId}:{readFilter}:{limit}:{offset}` |
 
 ## Feed Algorithm
 

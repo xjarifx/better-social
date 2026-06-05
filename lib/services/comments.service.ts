@@ -1,8 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { cache, buildCacheKey } from "@/lib/cache";
 import { AppError } from "@/lib/errors";
-
-const COMMENTS_TTL_SECONDS = 30;
 
 async function countCommentSubtree(commentId: string): Promise<number> {
   const visited = new Set<string>();
@@ -91,13 +88,6 @@ export async function createComment(
     return comment;
   });
 
-  await cache.invalidatePattern(`comments:post:${postId}*`);
-  await cache.invalidatePattern(`post:${postId}*`);
-  await cache.invalidatePattern("feed:*");
-  await cache.invalidatePattern("for-you:*");
-  await cache.invalidatePattern(`timeline:user:${post.authorId}*`);
-  await cache.invalidatePattern(`notifications:user:${post.authorId}*`);
-
   return {
     id: result.id,
     content: result.content,
@@ -122,10 +112,6 @@ export async function getComments(
 
   const post = await prisma.post.findUnique({ where: { id: postId } });
   if (!post) throw new AppError("Post not found", 404);
-
-  const cacheKey = buildCacheKey("comments", postId, parentId ?? "root", limit, offset, userId || "anon");
-  const cached = await cache.get(cacheKey);
-  if (cached) return cached;
 
   const total = await prisma.comment.count({
     where: { postId, parentId },
@@ -214,7 +200,6 @@ export async function getComments(
     offset,
   };
 
-  await cache.set(cacheKey, response, COMMENTS_TTL_SECONDS * 1000);
   return response;
 }
 
@@ -246,11 +231,6 @@ export async function updateComment(
       _count: { select: { replies: true } },
     },
   });
-
-  await cache.invalidatePattern(`comments:post:${updatedComment.postId}*`);
-  await cache.invalidatePattern(`post:${updatedComment.postId}*`);
-  await cache.invalidatePattern("feed:*");
-  await cache.invalidatePattern("for-you:*");
 
   return {
     id: updatedComment.id,
@@ -284,11 +264,6 @@ export async function deleteComment(
     });
   });
 
-  await cache.invalidatePattern(`comments:post:${comment.postId}*`);
-  await cache.invalidatePattern(`post:${comment.postId}*`);
-  await cache.invalidatePattern("feed:*");
-  await cache.invalidatePattern("for-you:*");
-
   return { message: "Comment deleted successfully", deletedCount: subtreeCount };
 }
 
@@ -318,9 +293,6 @@ export async function likeComment(
     });
     return like;
   });
-
-  await cache.invalidatePattern(`comments:post:${postId}*`);
-  await cache.invalidatePattern(`post:${postId}*`);
 
   return {
     id: result.id,
@@ -356,9 +328,6 @@ export async function unlikeComment(
       data: { likesCount: { decrement: 1 } },
     });
   });
-
-  await cache.invalidatePattern(`comments:post:${postId}*`);
-  await cache.invalidatePattern(`post:${postId}*`);
 
   return { message: "Comment unliked successfully" };
 }

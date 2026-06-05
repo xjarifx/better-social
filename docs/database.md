@@ -89,16 +89,6 @@ PostgreSQL database managed via Prisma 7 ORM. The schema is defined in `prisma/s
 | read | Boolean | Default: false |
 | createdAt | DateTime | |
 
-### RefreshToken (`refresh_tokens`)
-| Column | Type | Notes |
-|---|---|---|
-| id | UUID | PK |
-| userId | UUID | FK -> users.id |
-| token | String | Unique, opaque string |
-| expiresAt | DateTime | Default 30 days |
-| revokedAt | DateTime? | Set on logout/rotation |
-| createdAt | DateTime | |
-
 ### Block (`blocks`)
 | Column | Type | Notes |
 |---|---|---|
@@ -118,7 +108,6 @@ User --< CommentLike   (liker)
 User --< Follower      (follower/following)
 User --< Notification  (recipient)
 User --< Notification  (triggering user)
-User --< RefreshToken
 User --< Block         (blocker/blocked)
 
 Post --< Comment       (parent post)

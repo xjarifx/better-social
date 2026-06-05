@@ -8,11 +8,8 @@ export const API_ROOT_URL = API_BASE_URL.startsWith("/")
   : API_BASE_URL.replace(/\/api\/v1\/?$/, "");
 const TOKEN_KEY = "better_media_access_token";
 
-const REFRESH_TOKEN_KEY = "better_media_refresh_token";
-
 interface AuthResponse {
   accessToken: string;
-  refreshToken: string;
   user: User;
 }
 
@@ -137,21 +134,14 @@ function getAccessToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
 
-function getRefreshToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(REFRESH_TOKEN_KEY);
-}
-
-function setTokens(accessToken: string, refreshToken: string): void {
+function setTokens(accessToken: string): void {
   if (typeof window === "undefined") return;
   localStorage.setItem(TOKEN_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 }
 
 function clearTokens(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
 async function apiRequest<T>(
@@ -179,43 +169,11 @@ async function apiRequest<T>(
   });
 
   if (response.status === 401 && token) {
-    const refreshToken = getRefreshToken();
-    if (refreshToken) {
-      try {
-        const refreshResponse = await fetch(`${API_BASE_URL}/auth/refresh`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ refreshToken }),
-        });
-
-        if (refreshResponse.ok) {
-          const envelope = await refreshResponse.json();
-          const data: AuthResponse = envelope.data ?? envelope;
-          setTokens(data.accessToken, data.refreshToken);
-
-          headers["Authorization"] = `Bearer ${data.accessToken}`;
-          return apiRequest<T>(endpoint, { ...options, headers });
-        } else {
-          clearTokens();
-          if (typeof window !== "undefined" && window.location.pathname !== "/login") {
-            window.location.href = "/login";
-          }
-          throw new Error("Session expired");
-        }
-      } catch (error) {
-        clearTokens();
-        if (typeof window !== "undefined" && window.location.pathname !== "/login") {
-          window.location.href = "/login";
-        }
-        throw error;
-      }
-    } else {
-      clearTokens();
-      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
-        window.location.href = "/login";
-      }
-      throw new Error("No refresh token available");
+    clearTokens();
+    if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+      window.location.href = "/login";
     }
+    throw new Error("Session expired");
   }
 
   if (!response.ok) {
@@ -289,13 +247,7 @@ export const authAPI = {
 
   logout: async (): Promise<void> => {
     try {
-      const refreshToken = getRefreshToken();
-      if (refreshToken) {
-        await apiRequest("/auth/logout", {
-          method: "POST",
-          body: JSON.stringify({ refreshToken }),
-        });
-      }
+      await apiRequest("/auth/logout", { method: "POST" });
     } finally {
       clearTokens();
     }

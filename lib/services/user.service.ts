@@ -1,17 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { cache, buildCacheKey } from "@/lib/cache";
 import { AppError } from "@/lib/errors";
 import { syncUserPlanExpiration } from "@/lib/services/billing.service";
 
-const PROFILE_TTL_SECONDS = 120;
-const TIMELINE_TTL_SECONDS = 30;
-
 export async function getProfile(userId: string) {
   await syncUserPlanExpiration(userId);
-
-  const cacheKey = buildCacheKey("user", "public", userId);
-  const cached = await cache.get(cacheKey);
-  if (cached) return cached;
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -27,8 +19,6 @@ export async function getProfile(userId: string) {
   });
 
   if (!user) throw new AppError("User not found", 404);
-
-  await cache.set(cacheKey, user, PROFILE_TTL_SECONDS * 1000);
   return user;
 }
 
@@ -77,9 +67,6 @@ export async function updateProfile(
     },
   });
 
-  await cache.invalidatePattern(`user:${userId}*`);
-  await cache.invalidatePattern(`timeline:user:${userId}*`);
-
   return updatedUser;
 }
 
@@ -89,10 +76,6 @@ export async function getUserPosts(
   offset: number = 0,
   viewerId?: string,
 ) {
-  const cacheKey = buildCacheKey("timeline", userId, viewerId || "anon", limit, offset);
-  const cached = await cache.get(cacheKey);
-  if (cached) return cached;
-
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new AppError("User not found", 404);
 
@@ -159,7 +142,6 @@ export async function getUserPosts(
     offset,
   };
 
-  await cache.set(cacheKey, response, TIMELINE_TTL_SECONDS * 1000);
   return response;
 }
 

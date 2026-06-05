@@ -1,6 +1,5 @@
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
-import { cache } from "@/lib/cache";
 import { AppError } from "@/lib/errors";
 import { getEnvWithDefault, requireEnv } from "@/lib/env";
 
@@ -18,11 +17,6 @@ function getStripe(): Stripe {
     stripeClient = new Stripe(requireEnv("STRIPE_SECRET_KEY"));
   }
   return stripeClient;
-}
-
-async function invalidateUserPlanCaches(userId: string) {
-  await cache.invalidatePattern(`user:${userId}*`);
-  await cache.invalidatePattern(`timeline:user:${userId}*`);
 }
 
 function getPlanUnlockExpiryDate() {
@@ -44,7 +38,6 @@ async function applyFreePlan(userId: string) {
       stripeCurrentPeriodEndAt: null,
     },
   });
-  await invalidateUserPlanCaches(userId);
   return updated;
 }
 
@@ -101,7 +94,6 @@ async function activateProPlan(
       stripeCurrentPeriodEndAt: data.stripeCurrentPeriodEndAt ?? getPlanUnlockExpiryDate(),
     },
   });
-  await invalidateUserPlanCaches(userId);
   return updated;
 }
 

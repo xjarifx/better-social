@@ -94,63 +94,14 @@ export const openApiSpec = {
     "/auth/logout": {
       post: {
         tags: ["Authentication"],
-        summary: "Log out and revoke refresh token",
+        summary: "Log out",
         operationId: "logoutUser",
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/RefreshTokenInput" },
-            },
-          },
-        },
         responses: {
           "200": {
             description: "Logged out successfully",
             content: {
               "application/json": {
                 schema: { $ref: "#/components/schemas/SuccessResponse_MessageResponse" },
-              },
-            },
-          },
-          "401": {
-            description: "Invalid refresh token",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ErrorResponse" },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/auth/refresh": {
-      post: {
-        tags: ["Authentication"],
-        summary: "Refresh access and refresh tokens",
-        operationId: "refreshTokens",
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/RefreshTokenInput" },
-            },
-          },
-        },
-        responses: {
-          "200": {
-            description: "New tokens issued",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/SuccessResponse_AuthResponse" },
-              },
-            },
-          },
-          "401": {
-            description: "Invalid or expired refresh token",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ErrorResponse" },
               },
             },
           },
@@ -1761,7 +1712,6 @@ export const openApiSpec = {
         type: "object",
         properties: {
           accessToken: { type: "string", description: "JWT access token" },
-          refreshToken: { type: "string", description: "JWT refresh token" },
           user: { $ref: "#/components/schemas/User" },
         },
       },
@@ -1788,13 +1738,7 @@ export const openApiSpec = {
           password: { type: "string" },
         },
       },
-      RefreshTokenInput: {
-        type: "object",
-        required: ["refreshToken"],
-        properties: {
-          refreshToken: { type: "string" },
-        },
-      },
+
       Post: {
         type: "object",
         properties: {

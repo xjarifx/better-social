@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { cache } from "@/lib/cache";
 import { AppError } from "@/lib/errors";
 
 function formatUserLabel(user?: {
@@ -59,12 +58,6 @@ export async function likePost(
     return like;
   });
 
-  await cache.invalidatePattern(`post:${postId}*`);
-  await cache.invalidatePattern("feed:*");
-  await cache.invalidatePattern("for-you:*");
-  await cache.invalidatePattern(`timeline:user:${post.authorId}*`);
-  await cache.invalidatePattern(`notifications:user:${post.authorId}*`);
-
   return {
     id: result.id,
     userId: result.userId,
@@ -98,11 +91,6 @@ export async function unlikePost(
       data: { likesCount: { decrement: 1 } },
     });
   });
-
-  await cache.invalidatePattern(`post:${postId}*`);
-  await cache.invalidatePattern("feed:*");
-  await cache.invalidatePattern("for-you:*");
-  await cache.invalidatePattern(`timeline:user:${post.authorId}*`);
 
   return { message: "Post unliked successfully" };
 }

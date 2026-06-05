@@ -25,7 +25,6 @@ components/           React components
   RightSidebar.tsx    Sidebar with suggestions/trends
 lib/                  Core application logic
   auth.ts             JWT token verification
-  cache.ts            Redis / in-memory cache abstraction
   prisma.ts           Prisma client singleton
   env.ts              Environment variable helpers
   errors.ts           Custom error classes
@@ -85,20 +84,11 @@ App Layout
 ## Authentication Flow
 
 1. User registers or logs in via `/api/v1/auth/register` or `/api/v1/auth/login`
-2. Server returns `accessToken` (JWT, 5 min) and `refreshToken` (opaque, 30 days)
-3. Client stores tokens, sends `Authorization: Bearer <accessToken>` on every request
+2. Server returns an `accessToken` (JWT)
+3. Client stores the token, sends `Authorization: Bearer <accessToken>` on every request
 4. API routes call `authenticateRequest()` to verify the JWT
-5. When access token expires, client calls `/api/v1/auth/refresh` with the refresh token
-6. Old refresh token is revoked, new pair is issued (token rotation)
 
-## Caching
 
-Two backends are supported:
-
-- **Redis** — when `REDIS_URL` is set in environment
-- **In-memory Map** — fallback when Redis is not configured
-
-Both implement the same interface (`get`, `set`, `del`, `invalidatePattern`). Cache TTLs vary by domain (20s for notifications, 30s for feeds/comments, 60s for single posts, 120s for user profiles).
 
 ## Error Handling
 

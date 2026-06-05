@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       const response = await authAPI.login({ email, password });
-      setTokens(response.accessToken, response.refreshToken);
+      setTokens(response.accessToken);
       setUser(response.user);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Login failed";
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       const response = await authAPI.register(data);
-      setTokens(response.accessToken, response.refreshToken);
+      setTokens(response.accessToken);
       setUser(response.user);
     } catch (err) {
       const message =
