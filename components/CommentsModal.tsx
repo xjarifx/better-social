@@ -179,17 +179,19 @@ export function CommentsModal({
                   />
                   <span>{likeCount}</span>
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 px-2 text-xs text-text-secondary hover:bg-surface-hover hover:text-text-primary"
-                  onClick={() => commentsApi.toggleReplies(post.id, comment.id)}
-                >
-                  <MessageCircle className={actionIconSize} />
-                  <span>
-                    {repliesCount > 0 ? `${repliesCount} replies` : "Reply"}
-                  </span>
-                </Button>
+                {depth === 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs text-text-secondary hover:bg-surface-hover hover:text-text-primary"
+                    onClick={() => commentsApi.toggleReplies(post.id, comment.id)}
+                  >
+                    <MessageCircle className={actionIconSize} />
+                    <span>
+                      {repliesCount > 0 ? `${repliesCount} replies` : "Reply"}
+                    </span>
+                  </Button>
+                )}
               </div>
             )}
           </div>
@@ -197,29 +199,31 @@ export function CommentsModal({
 
         {repliesExpanded && (
           <div className="ml-10 space-y-3 border-l border-border pl-4">
-            <div className="rounded-xl border-2 border-border bg-surface/90 backdrop-blur-sm px-3 py-2">
-              <p className="mb-2 text-xs font-medium text-text-secondary">
-                Reply to {authorName}
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                <Input
-                  value={replyDraft}
-                  onChange={(e) =>
-                    commentsApi.setReplyDraft(comment.id, e.target.value)
-                  }
-                  placeholder="Write a reply..."
-                  className="h-9 flex-1 text-sm"
-                />
-                <Button
-                  onClick={() =>
-                    commentsApi.handleAddReply(post.id, comment.id)
-                  }
-                  size="sm"
-                >
-                  Reply
-                </Button>
+            {depth === 0 && (
+              <div className="rounded-xl border-2 border-border bg-surface/90 backdrop-blur-sm px-3 py-2">
+                <p className="mb-2 text-xs font-medium text-text-secondary">
+                  Reply to {authorName}
+                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Input
+                    value={replyDraft}
+                    onChange={(e) =>
+                      commentsApi.setReplyDraft(comment.id, e.target.value)
+                    }
+                    placeholder="Write a reply..."
+                    className="h-9 flex-1 text-sm"
+                  />
+                  <Button
+                    onClick={() =>
+                      commentsApi.handleAddReply(post.id, comment.id)
+                    }
+                    size="sm"
+                  >
+                    Reply
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
 
             {repliesLoading ? (
               <Spinner size="sm" className="my-1" />

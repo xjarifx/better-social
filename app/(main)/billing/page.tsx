@@ -236,7 +236,7 @@ export default function BillingPage() {
               <h3 className="text-[18px] font-medium text-white">Pro</h3>
               <div className="mt-2 flex items-baseline gap-1">
                 <span className="text-[36px] font-normal text-white">
-                  $9.99
+                  ${(status?.proPriceAmount ?? 999) / 100}
                 </span>
                 <span className="text-[14px] text-white/60">/month</span>
               </div>
@@ -282,7 +282,7 @@ export default function BillingPage() {
                 onClick={handleUpgradeToPro}
                 disabled={isRedirecting}
               >
-                {isRedirecting ? "Redirecting to Stripe..." : "Pay $9.99"}
+                {isRedirecting ? "Redirecting to Stripe..." : `Pay $${(status?.proPriceAmount ?? 999) / 100}`}
               </Button>
             )}
           </div>

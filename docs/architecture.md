@@ -9,8 +9,8 @@ Better Media is a monorepo Next.js 16 application using the App Router for both 
 ```
 app/                  Next.js App Router
   (auth)/             Auth pages (login, register)
-  (main)/             Main app pages (feed, profile, search, notifications, billing, etc.)
-  api/v1/             API route handlers (auth, posts, users, comments, likes, follows, notifications, blocks, billing, health)
+  (main)/             Main app pages (feed, profile, search, billing, etc.)
+  api/v1/             API route handlers (auth, posts, users, comments, likes, follows, blocks, billing, health)
   api-docs/           Swagger UI page
 components/           React components
   ui/                 Primitive UI components (button, input, dialog, etc.)
@@ -47,7 +47,6 @@ lib/                  Core application logic
     comments.service.ts Comment CRUD
     likes.service.ts  Like/unlike logic
     follows.service.ts Follow/unfollow logic
-    notifications.service.ts Notification logic
     blocks.service.ts Block/unblock logic
     billing.service.ts Stripe integration
     user.service.ts   User profile logic
@@ -62,7 +61,7 @@ prisma/
 | Route Group | Path | Description |
 |---|---|---|
 | `(auth)` | `/login`, `/register` | Unauthenticated pages |
-| `(main)` | `/`, `/profile/:id`, `/search`, `/notifications`, `/billing` | Authenticated pages |
+| `(main)` | `/`, `/profile/:id`, `/search`, `/billing` | Authenticated pages |
 | `api/v1` | `/api/v1/*` | REST API endpoints |
 
 The `(auth)` layout redirects authenticated users to `/`. The `(main)` layout redirects unauthenticated users to `/login`.
@@ -77,7 +76,6 @@ App Layout
       HomePage             -> PostComposer + Feed tabs (For You / Following)
       ProfilePage          -> User info + PostCard list
       SearchPage           -> User search results
-      NotificationsPage    -> Notification list
       BillingPage          -> Plan management
 ```
 

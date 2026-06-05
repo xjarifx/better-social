@@ -1,16 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { AppError } from "@/lib/errors";
 
-function formatUserLabel(user?: {
-  username?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-}): string {
-  if (!user) return "Someone";
-  const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
-  return fullName || user.username || "Someone";
-}
-
 export async function likePost(
   userId: string,
   params: { postId: string },
@@ -42,18 +32,6 @@ export async function likePost(
       where: { id: postId },
       data: { likesCount: { increment: 1 } },
     });
-
-    if (post.authorId !== userId) {
-      await tx.notification.create({
-        data: {
-          userId: post.authorId,
-          type: "LIKE",
-          relatedUserId: userId,
-          relatedPostId: postId,
-          message: `${formatUserLabel(like.user)} liked your post`,
-        },
-      });
-    }
 
     return like;
   });

@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
-import { Home, Bell, Search, User, LogOut, MoreHorizontal, CreditCard } from "lucide-react";
+import { Home, Search, User, LogOut, MoreHorizontal, CreditCard } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/context/AuthContext";
@@ -29,7 +29,6 @@ export function TopNav({ onOpenPostComposer }: TopNavProps) {
   const navItems = [
     { icon: Home, label: "Home", to: "/" },
     { icon: Search, label: "Explore", to: "/search" },
-    { icon: Bell, label: "Notifications", to: "/notifications" },
     { icon: CreditCard, label: "Subscription", to: "/billing" },
     { icon: User, label: "Profile", to: "/profile" },
   ];

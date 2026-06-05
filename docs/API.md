@@ -58,10 +58,6 @@ Access tokens are JWT-based.
 | GET | /users/:userId/followers | Yes | List followers |
 | GET | /users/:userId/following | Yes | List following |
 | GET | /users/search?q= | Yes | Search users (partial match) |
-| GET | /notifications | Yes | List notifications |
-| GET | /notifications/:notificationId | Yes* | Get notification (* recipient only) |
-| PATCH | /notifications/:notificationId | Yes* | Mark read/unread (* recipient only) |
-| DELETE | /notifications/:notificationId | Yes* | Delete notification (* recipient only) |
 | GET | /blocks | Yes | List blocked users |
 | POST | /blocks | Yes | Block user by username |
 | DELETE | /blocks | Yes | Unblock user by username |
@@ -99,14 +95,6 @@ Paginated endpoints accept `limit` (default 20) and `offset` (default 0) and ret
 - Blocked users excluded from all feeds
 - Prevents follows (403 if block exists)
 - Check endpoint returns `blockedByMe` and `blockedByThem` flags
-
-## Notification Triggers
-
-| Action | Type | Recipient |
-|---|---|---|
-| Like a post | LIKE | Post author |
-| Comment on a post | COMMENT | Post author |
-| Follow a user | NEW_FOLLOWER | Followed user |
 
 ## Image Upload
 

@@ -40,6 +40,7 @@ export async function createComment(
       where: { id: parentId, postId },
     });
     if (!parent) throw new AppError("Parent comment not found", 404);
+    if (parent.parentId) throw new AppError("Cannot reply to a reply", 400);
   }
 
   const result = await prisma.$transaction(async (tx: any) => {
@@ -68,22 +69,6 @@ export async function createComment(
       where: { id: postId },
       data: { commentsCount: { increment: 1 } },
     });
-
-    if (post.authorId !== authorId) {
-      const author = await tx.user.findUnique({
-        where: { id: authorId },
-        select: { firstName: true, lastName: true },
-      });
-      await tx.notification.create({
-        data: {
-          userId: post.authorId,
-          type: "COMMENT",
-          relatedUserId: authorId,
-          relatedPostId: postId,
-          message: `${author?.firstName ?? "Someone"} ${author?.lastName ?? ""} commented on your post`.trim(),
-        },
-      });
-    }
 
     return comment;
   });

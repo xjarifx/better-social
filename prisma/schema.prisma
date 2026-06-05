@@ -7,12 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum NotificationType {
-  LIKE
-  COMMENT
-  NEW_FOLLOWER
-}
-
 enum Plan {
   FREE
   PRO
@@ -46,8 +40,6 @@ model User {
   likes                      Like[]
   followers                  Follower[] @relation("UserFollowers")
   following                  Follower[] @relation("UserFollowing")
-  notifications              Notification[] @relation("UserNotifications")
-  triggeredNotifications     Notification[] @relation("RelatedUserNotifications")
   blockedUsers               Block[] @relation("UserBlocks")
   blockedBy                  Block[] @relation("BlockedUsers")
 
@@ -69,7 +61,6 @@ model Post {
   author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments      Comment[]
   likes         Like[]
-  notifications Notification[]
 
   @@map("posts")
 }
@@ -133,24 +124,6 @@ model Follower {
 
   @@unique([followerId, followingId])
   @@map("followers")
-}
-
-model Notification {
-  id            String            @id @default(uuid())
-  userId        String            @map("user_id")
-  type          NotificationType
-  relatedUserId String            @map("related_user_id")
-  relatedPostId String?           @map("related_post_id")
-  message       String
-  read          Boolean           @default(false)
-  createdAt     DateTime          @default(now()) @map("created_at")
-  deletedAt     DateTime?         @map("deleted_at")
-
-  user        User  @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
-  relatedUser User  @relation("RelatedUserNotifications", fields: [relatedUserId], references: [id], onDelete: Cascade)
-  relatedPost Post? @relation(fields: [relatedPostId], references: [id], onDelete: Cascade)
-
-  @@map("notifications")
 }
 
 model Block {

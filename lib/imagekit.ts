@@ -1,9 +1,8 @@
 import ImageKit from "@imagekit/nodejs";
-import { requireEnv } from "@/lib/env";
 
-const privateKey = requireEnv("IMAGEKIT_PRIVATE_KEY");
-requireEnv("IMAGEKIT_PUBLIC_KEY");
-requireEnv("IMAGEKIT_URL_ENDPOINT");
+const privateKey = process.env.IMAGEKIT_PRIVATE_KEY!;
+process.env.IMAGEKIT_PUBLIC_KEY!;
+process.env.IMAGEKIT_URL_ENDPOINT!;
 
 const imagekit = new ImageKit({
   privateKey,

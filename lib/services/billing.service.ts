@@ -1,30 +1,36 @@
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
 import { AppError } from "@/lib/errors";
-import { getEnvWithDefault, requireEnv } from "@/lib/env";
+const PRO_PRICE_ID = process.env.STRIPE_PRO_PRICE_ID!;
+const BASE_URL = process.env.CLIENT_URL?.trim() || "http://localhost:3000";
 
-const PRO_AMOUNT_CENTS = Number(getEnvWithDefault("STRIPE_PRO_PRICE_CENTS", "999"));
-const PRO_CURRENCY = getEnvWithDefault("STRIPE_PRO_CURRENCY", "usd");
-const PRO_UNLOCK_DURATION_SECONDS = Number(
-  getEnvWithDefault("STRIPE_PRO_UNLOCK_DURATION_SECONDS", "60"),
-);
-const BASE_URL = getEnvWithDefault("PUBLIC_APP_URL", "http://localhost:3000");
+let cachedUnlockDuration: number | null = null;
+
+async function getProUnlockDurationSeconds(): Promise<number> {
+  if (cachedUnlockDuration !== null) return cachedUnlockDuration;
+  const price = await getStripe().prices.retrieve(PRO_PRICE_ID, {
+    expand: ["product"],
+  });
+  const product = price.product as Stripe.Product;
+  const raw = product.metadata?.unlockDurationSeconds;
+  const seconds = Number(raw);
+  cachedUnlockDuration =
+    Number.isFinite(seconds) && seconds > 0 ? seconds : 60;
+  return cachedUnlockDuration;
+}
 
 let stripeClient: Stripe | null = null;
 
 function getStripe(): Stripe {
   if (!stripeClient) {
-    stripeClient = new Stripe(requireEnv("STRIPE_SECRET_KEY"));
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!);
   }
   return stripeClient;
 }
 
-function getPlanUnlockExpiryDate() {
-  const safeSeconds =
-    Number.isFinite(PRO_UNLOCK_DURATION_SECONDS) && PRO_UNLOCK_DURATION_SECONDS > 0
-      ? PRO_UNLOCK_DURATION_SECONDS
-      : 60;
-  return new Date(Date.now() + safeSeconds * 1000);
+async function getPlanUnlockExpiryDate() {
+  const seconds = await getProUnlockDurationSeconds();
+  return new Date(Date.now() + seconds * 1000);
 }
 
 async function applyFreePlan(userId: string) {
@@ -91,7 +97,7 @@ async function activateProPlan(
       planStartedAt: new Date(),
       stripeCustomerId: data.stripeCustomerId ?? user.stripeCustomerId,
       stripeSubscriptionId: data.stripeSubscriptionId ?? user.stripeSubscriptionId,
-      stripeCurrentPeriodEndAt: data.stripeCurrentPeriodEndAt ?? getPlanUnlockExpiryDate(),
+      stripeCurrentPeriodEndAt: data.stripeCurrentPeriodEndAt ?? (await getPlanUnlockExpiryDate()),
     },
   });
   return updated;
@@ -114,7 +120,14 @@ export async function getBillingStatus(userId: string) {
   });
 
   if (!user) throw new AppError("User not found", 404);
-  return user;
+
+  const price = await getStripe().prices.retrieve(PRO_PRICE_ID);
+
+  return {
+    ...user,
+    proPriceAmount: price.unit_amount ?? 999,
+    proPriceCurrency: price.currency ?? "usd",
+  };
 }
 
 export async function createCheckoutSession(userId: string) {
@@ -141,24 +154,17 @@ export async function createCheckoutSession(userId: string) {
     payment_method_types: ["card"],
     line_items: [
       {
-        price_data: {
-          currency: PRO_CURRENCY,
-          product_data: {
-            name: "Pro Plan",
-            description: "100 character posts, Pro badge, Priority support",
-          },
-          unit_amount: PRO_AMOUNT_CENTS,
-        },
+        price: PRO_PRICE_ID,
         quantity: 1,
       },
     ],
-    mode: "payment",
+    mode: "subscription",
     success_url: `${BASE_URL}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${BASE_URL}/billing`,
     metadata: {
       userId: user.id,
       plan: "PRO",
-      unlockDurationSeconds: String(PRO_UNLOCK_DURATION_SECONDS),
+      unlockDurationSeconds: String(await getProUnlockDurationSeconds()),
     },
   });
 
@@ -184,14 +190,15 @@ export async function createPaymentIntent(userId: string) {
     });
   }
 
+  const price = await getStripe().prices.retrieve(PRO_PRICE_ID);
   const paymentIntent = await getStripe().paymentIntents.create({
-    amount: PRO_AMOUNT_CENTS,
-    currency: PRO_CURRENCY,
+    amount: price.unit_amount ?? 999,
+    currency: price.currency,
     customer: customerId,
     metadata: {
       userId: user.id,
       plan: "PRO",
-      unlockDurationSeconds: String(PRO_UNLOCK_DURATION_SECONDS),
+      unlockDurationSeconds: String(await getProUnlockDurationSeconds()),
     },
     automatic_payment_methods: { enabled: true },
   });
@@ -293,7 +300,7 @@ export async function handleStripeWebhook(
   rawBody: string,
   signature: string,
 ) {
-  const stripeWebhookSecret = requireEnv("STRIPE_WEBHOOK_SECRET");
+  const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
   let event: Stripe.Event;
   try {

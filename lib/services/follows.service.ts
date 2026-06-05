@@ -1,18 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { AppError } from "@/lib/errors";
 
-function formatUserLabel(
-  user?: {
-    username?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-  } | null,
-): string {
-  if (!user) return "Someone";
-  const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ");
-  return fullName || user.username || "Someone";
-}
-
 export async function followUser(followerId: string, followingId: string) {
   if (followerId === followingId) {
     throw new AppError("Cannot follow yourself", 400);
@@ -42,20 +30,6 @@ export async function followUser(followerId: string, followingId: string) {
 
   const follow = await prisma.follower.create({
     data: { followerId, followingId },
-  });
-
-  const follower = await prisma.user.findUnique({
-    where: { id: followerId },
-    select: { username: true, firstName: true, lastName: true },
-  });
-
-  await prisma.notification.create({
-    data: {
-      userId: followingId,
-      type: "NEW_FOLLOWER",
-      relatedUserId: followerId,
-      message: `${formatUserLabel(follower)} started following you`,
-    },
   });
 
   return follow;

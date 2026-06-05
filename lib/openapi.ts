@@ -1085,148 +1085,6 @@ export const openApiSpec = {
         },
       },
     },
-    "/notifications": {
-      get: {
-        tags: ["Notifications"],
-        summary: "List notifications (paginated)",
-        operationId: "listNotifications",
-        security: [{ BearerAuth: [] }],
-        parameters: [
-          {
-            name: "limit",
-            in: "query",
-            schema: { type: "integer", default: 20 },
-          },
-          {
-            name: "offset",
-            in: "query",
-            schema: { type: "integer", default: 0 },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Notifications list",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/SuccessResponse_NotificationsResponse" },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/notifications/{notificationId}": {
-      get: {
-        tags: ["Notifications"],
-        summary: "Get a single notification",
-        operationId: "getNotification",
-        security: [{ BearerAuth: [] }],
-        parameters: [
-          {
-            name: "notificationId",
-            in: "path",
-            required: true,
-            schema: { type: "string", format: "uuid" },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Notification details",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/SuccessResponse_Notification" },
-              },
-            },
-          },
-          "404": {
-            description: "Notification not found",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ErrorResponse" },
-              },
-            },
-          },
-        },
-      },
-      patch: {
-        tags: ["Notifications"],
-        summary: "Mark notification as read/unread",
-        operationId: "updateNotification",
-        security: [{ BearerAuth: [] }],
-        parameters: [
-          {
-            name: "notificationId",
-            in: "path",
-            required: true,
-            schema: { type: "string", format: "uuid" },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: ["read"],
-                properties: {
-                  read: { type: "boolean" },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          "200": {
-            description: "Notification updated",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/SuccessResponse_Notification" },
-              },
-            },
-          },
-          "404": {
-            description: "Notification not found",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ErrorResponse" },
-              },
-            },
-          },
-        },
-      },
-      delete: {
-        tags: ["Notifications"],
-        summary: "Delete a notification",
-        operationId: "deleteNotification",
-        security: [{ BearerAuth: [] }],
-        parameters: [
-          {
-            name: "notificationId",
-            in: "path",
-            required: true,
-            schema: { type: "string", format: "uuid" },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Notification deleted",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/SuccessResponse_MessageResponse" },
-              },
-            },
-          },
-          "404": {
-            description: "Notification not found",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/ErrorResponse" },
-              },
-            },
-          },
-        },
-      },
-    },
     "/blocks": {
       get: {
         tags: ["Blocks"],
@@ -1901,28 +1759,6 @@ export const openApiSpec = {
           user: { $ref: "#/components/schemas/UserSummary" },
         },
       },
-      Notification: {
-        type: "object",
-        properties: {
-          id: { type: "string", format: "uuid" },
-          type: { type: "string", enum: ["LIKE", "COMMENT", "NEW_FOLLOWER"] },
-          message: { type: "string" },
-          read: { type: "boolean" },
-          createdAt: { type: "string", format: "date-time" },
-          relatedUser: {
-            nullable: true,
-            allOf: [{ $ref: "#/components/schemas/UserSummary" }],
-          },
-          relatedPost: {
-            nullable: true,
-            type: "object",
-            properties: {
-              id: { type: "string", format: "uuid" },
-              content: { type: "string" },
-            },
-          },
-        },
-      },
       FollowRecord: {
         type: "object",
         properties: {
@@ -1998,20 +1834,6 @@ export const openApiSpec = {
               results: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
-              },
-            },
-          },
-        ],
-      },
-      NotificationsResponse: {
-        allOf: [
-          { $ref: "#/components/schemas/PaginationMeta" },
-          {
-            type: "object",
-            properties: {
-              notifications: {
-                type: "array",
-                items: { $ref: "#/components/schemas/Notification" },
               },
             },
           },
@@ -2233,22 +2055,6 @@ export const openApiSpec = {
           error: { type: "null" },
         },
       },
-      SuccessResponse_Notification: {
-        type: "object",
-        properties: {
-          success: { type: "boolean", example: true },
-          data: { $ref: "#/components/schemas/Notification" },
-          error: { type: "null" },
-        },
-      },
-      SuccessResponse_NotificationsResponse: {
-        type: "object",
-        properties: {
-          success: { type: "boolean", example: true },
-          data: { $ref: "#/components/schemas/NotificationsResponse" },
-          error: { type: "null" },
-        },
-      },
       SuccessResponse_UserSummaryArray: {
         type: "object",
         properties: {
@@ -2355,7 +2161,6 @@ export const openApiSpec = {
     { name: "Comment Likes", description: "Like and unlike comments" },
     { name: "Users", description: "User profiles and search" },
     { name: "Follows", description: "Follow and unfollow users" },
-    { name: "Notifications", description: "List, read, and manage notifications" },
     { name: "Blocks", description: "Block, unblock, and check block status" },
     { name: "Billing", description: "Stripe billing, plans, and payment management" },
     { name: "Health", description: "Health check endpoints" },

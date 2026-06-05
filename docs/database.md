@@ -77,18 +77,6 @@ PostgreSQL database managed via Prisma 7 ORM. The schema is defined in `prisma/s
 | createdAt | DateTime | |
 | **Unique** | (followerId, followingId) | Unidirectional follow |
 
-### Notification (`notifications`)
-| Column | Type | Notes |
-|---|---|---|
-| id | UUID | PK |
-| userId | UUID | FK -> users.id (recipient) |
-| type | Enum (LIKE, COMMENT, NEW_FOLLOWER) | |
-| relatedUserId | UUID | FK -> users.id (triggering user) |
-| relatedPostId | UUID? | FK -> posts.id (optional, for like/comment notifications) |
-| message | String | Human-readable summary |
-| read | Boolean | Default: false |
-| createdAt | DateTime | |
-
 ### Block (`blocks`)
 | Column | Type | Notes |
 |---|---|---|
@@ -106,13 +94,10 @@ User --< Comment       (author)
 User --< Like          (liker)
 User --< CommentLike   (liker)
 User --< Follower      (follower/following)
-User --< Notification  (recipient)
-User --< Notification  (triggering user)
 User --< Block         (blocker/blocked)
 
 Post --< Comment       (parent post)
 Post --< Like          (likes on post)
-Post --< Notification  (related post)
 
 Comment --< Comment    (self-referencing, parentId for nested replies)
 Comment --< CommentLike
@@ -125,4 +110,4 @@ CommentLike -- unique(userId, commentId)
 
 ## Soft Deletes
 
-Posts, comments, likes, comment likes, users, and notifications support soft deletes via a `deletedAt` timestamp. Queries filter out soft-deleted records by default.
+Posts, comments, likes, comment likes, and users support soft deletes via a `deletedAt` timestamp. Queries filter out soft-deleted records by default.

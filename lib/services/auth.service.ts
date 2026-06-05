@@ -2,15 +2,13 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AppError } from "@/lib/errors";
-import { getEnvWithDefault, requireEnv } from "@/lib/env";
-
 const SALT_ROUNDS = 10;
 
-const JWT_EXPIRES_IN = getEnvWithDefault("JWT_EXPIRES_IN", "5m");
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN?.trim() || "5m";
 
 function getJwtSecret() {
   try {
-    return requireEnv("JWT_SECRET");
+    return process.env.JWT_SECRET!;
   } catch (error) {
     console.error("Missing auth environment variables.", error);
     throw new AppError(

@@ -1,4 +1,4 @@
-const BASE_URL = process.env.PUBLIC_APP_URL || "";
+const BASE_URL = process.env.CLIENT_URL || "";
 const API_BASE_URL = BASE_URL
   ? `${BASE_URL.replace(/\/$/, "")}/api/v1`
   : "/api/v1";
@@ -64,23 +64,6 @@ export interface Follower {
   user?: UserSummary;
 }
 
-interface NotificationsResponse {
-  notifications: Notification[];
-  total: number;
-  limit: number;
-  offset: number;
-}
-
-export interface Notification {
-  id: string;
-  type: string;
-  message: string;
-  read: boolean;
-  createdAt: string;
-  relatedUser?: UserSummary | null;
-  relatedPost?: { id: string; content: string } | null;
-}
-
 interface BlocksResponse {
   blocked: BlockedUser[];
   total: number;
@@ -106,6 +89,8 @@ export interface BillingStatus {
   planStartedAt: string | null;
   stripeCurrentPeriodEndAt: string | null;
   stripeSubscriptionId: string | null;
+  proPriceAmount: number;
+  proPriceCurrency: string;
 }
 
 interface CommentsResponse {
@@ -457,28 +442,6 @@ export const followsAPI = {
 
   getUserFollowing: async (userId: string): Promise<Follower[]> => {
     return apiRequest(`/users/${userId}/following`);
-  },
-};
-
-export const notificationsAPI = {
-  list: async (limit = 20, offset = 0): Promise<NotificationsResponse> => {
-    return apiRequest(`/notifications?limit=${limit}&offset=${offset}`);
-  },
-
-  markRead: async (
-    notificationId: string,
-    read = true,
-  ): Promise<Notification> => {
-    return apiRequest(`/notifications/${notificationId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ read }),
-    });
-  },
-
-  remove: async (notificationId: string): Promise<void> => {
-    return apiRequest(`/notifications/${notificationId}`, {
-      method: "DELETE",
-    });
   },
 };
 

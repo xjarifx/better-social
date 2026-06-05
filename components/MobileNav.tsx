@@ -1,13 +1,12 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, Bell, User, Search, CreditCard, Plus } from "lucide-react";
+import { Home, User, Search, CreditCard, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { icon: Home, label: "Home", to: "/" },
   { icon: Search, label: "Explore", to: "/search" },
   { icon: CreditCard, label: "Subscription", to: "/billing" },
-  { icon: Bell, label: "Notifications", to: "/notifications" },
   { icon: User, label: "Profile", to: "/profile" },
 ];
 
