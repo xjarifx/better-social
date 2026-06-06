@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { followsAPI } from "@/shared/services/api";
+import { followsAPI } from "@/services/api";
 import type { Follower } from "@/types/api";
-import { useAuth } from "@/modules/auth/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { Users } from "lucide-react";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/ui/button";
 
 export default function FollowersPage() {
   const router = useRouter();

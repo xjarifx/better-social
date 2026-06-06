@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { updateComment, deleteComment } from "@/modules/posts/services/comments.service";
-import { successResponse, handleApiError, AppError } from "@/shared/lib/errors";
+import { authenticateRequest } from "@/utils/auth";
+import { updateComment, deleteComment } from "@/services/comments";
+import { successResponse, handleApiError, AppError } from "@/lib/errors";
 
 const updateCommentSchema = z.object({
   content: z.string().min(1).max(500),

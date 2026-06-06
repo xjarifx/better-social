@@ -1,4 +1,4 @@
-import { successResponse, handleApiError } from "@/shared/lib/errors";
+import { successResponse, handleApiError } from "@/lib/errors";
 
 export async function GET() {
   try {

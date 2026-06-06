@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { likePost, unlikePost, getPostLikes } from "@/modules/posts/services/likes.service";
-import { successResponse, handleApiError } from "@/shared/lib/errors";
-import { parsePaginationParams } from "@/shared/lib/pagination";
+import { authenticateRequest } from "@/utils/auth";
+import { likePost, unlikePost, getPostLikes } from "@/services/likes";
+import { successResponse, handleApiError } from "@/lib/errors";
+import { parsePaginationParams } from "@/lib/pagination";
 
 export async function POST(
   request: NextRequest,

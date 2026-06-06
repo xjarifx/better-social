@@ -1,8 +1,8 @@
 "use client";
 
-import { ThemeProvider } from "@/shared/components/ThemeProvider";
-import { AuthProvider } from "@/modules/auth/context/AuthContext";
-import { BlockProvider } from "@/modules/blocks/context/BlockContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { AuthProvider } from "@/context/AuthContext";
+import { BlockProvider } from "@/context/BlockContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (

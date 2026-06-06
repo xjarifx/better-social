@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { searchUsers } from "@/modules/users/services/user.service";
-import { successResponse, handleApiError } from "@/shared/lib/errors";
-import { parsePaginationParams } from "@/shared/lib/pagination";
+import { authenticateRequest } from "@/utils/auth";
+import { searchUsers } from "@/services/user";
+import { successResponse, handleApiError } from "@/lib/errors";
+import { parsePaginationParams } from "@/lib/pagination";
 
 export async function GET(request: NextRequest) {
   try {

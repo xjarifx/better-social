@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { login } from "@/modules/auth/services/auth.service";
-import { successResponse, handleApiError, AppError } from "@/shared/lib/errors";
+import { login } from "@/services/auth";
+import { successResponse, handleApiError, AppError } from "@/lib/errors";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),

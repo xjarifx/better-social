@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { createPost, getFeed } from "@/modules/posts/services/posts.service";
-import { successResponse, handleApiError, AppError } from "@/shared/lib/errors";
-import { parsePaginationParams } from "@/shared/lib/pagination";
+import { authenticateRequest } from "@/utils/auth";
+import { createPost, getFeed } from "@/services/posts";
+import { successResponse, handleApiError, AppError } from "@/lib/errors";
+import { parsePaginationParams } from "@/lib/pagination";
 
 const createPostSchema = z.object({
   content: z.string().max(100, "Content exceeds 100 character limit"),

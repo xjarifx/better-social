@@ -290,10 +290,10 @@ const generateUsername = (
   return variations[index % variations.length];
 };
 
-let prismaClient: typeof import("../src/shared/lib/prisma.js").prisma | null = null;
+let prismaClient: typeof import("../src/lib/prisma.js").prisma | null = null;
 
 async function main() {
-  const { prisma } = await import("../src/shared/lib/prisma.js");
+  const { prisma } = await import("../src/lib/prisma.js");
   prismaClient = prisma;
   console.log("🗑️  Cleaning up existing data...");
   await prisma.commentLike.deleteMany();

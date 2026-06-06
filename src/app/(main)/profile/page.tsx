@@ -8,15 +8,15 @@ import {
   followsAPI,
   likesAPI,
   postsAPI,
-} from "@/shared/services/api";
+} from "@/services/api";
 import type { User, Follower } from "@/types/api";
-import { useAuth } from "@/modules/auth/context/AuthContext";
-import { useBlocks } from "@/modules/blocks/context/BlockContext";
-import { Feed, CommentsModal, EditPostModal, ProBadge } from "@/modules/posts/components";
+import { useAuth } from "@/context/AuthContext";
+import { useBlocks } from "@/context/BlockContext";
+import { Feed, CommentsModal, EditPostModal, ProBadge } from "@/components";
 import type { PostProps } from "@/types/posts";
-import { useComments } from "@/modules/posts/hooks";
-import { transformPost } from "@/shared/lib/transformPost";
-import { Button } from "@/shared/ui/button";
+import { useComments } from "@/hooks";
+import { transformPost } from "@/lib/transformPost";
+import { Button } from "@/ui/button";
 
 export default function ProfilePage() {
   const { user } = useAuth();

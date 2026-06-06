@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { register } from "@/modules/auth/services/auth.service";
-import { successResponse, handleApiError, AppError } from "@/shared/lib/errors";
+import { register } from "@/services/auth";
+import { successResponse, handleApiError, AppError } from "@/lib/errors";
 
 const registerSchema = z.object({
   username: z.string().min(2, "Username must be at least 2 characters"),

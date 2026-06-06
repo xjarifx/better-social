@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { likeComment, unlikeComment } from "@/modules/posts/services/comments.service";
-import { successResponse, handleApiError } from "@/shared/lib/errors";
+import { authenticateRequest } from "@/utils/auth";
+import { likeComment, unlikeComment } from "@/services/comments";
+import { successResponse, handleApiError } from "@/lib/errors";
 
 export async function POST(
   request: NextRequest,

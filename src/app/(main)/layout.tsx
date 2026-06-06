@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TopNav } from "@/shared/components/TopNav";
-import { RightSidebar } from "@/shared/components/RightSidebar";
-import { MobileNav } from "@/shared/components/MobileNav";
-import { PostComposerModal } from "@/modules/posts/components/PostComposerModal";
-import { ProtectedRoute } from "@/modules/auth/components/ProtectedRoute";
+import { TopNav } from "@/components/TopNav";
+import { RightSidebar } from "@/components/RightSidebar";
+import { MobileNav } from "@/components/MobileNav";
+import { PostComposerModal } from "@/components/PostComposerModal";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function MainLayout({
   children,

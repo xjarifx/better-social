@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
-import { getProfile } from "@/modules/users/services/user.service";
-import { successResponse, handleApiError } from "@/shared/lib/errors";
+import { getProfile } from "@/services/user";
+import { successResponse, handleApiError } from "@/lib/errors";
 
 export async function GET(
   _request: NextRequest,

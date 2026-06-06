@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { createPaymentIntent } from "@/modules/billing/services/billing.service";
-import { successResponse, handleApiError } from "@/shared/lib/errors";
+import { authenticateRequest } from "@/utils/auth";
+import { createPaymentIntent } from "@/services/billing";
+import { successResponse, handleApiError } from "@/lib/errors";
 
 export async function POST(request: NextRequest) {
   try {

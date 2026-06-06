@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Image, Globe, Lock } from "lucide-react";
-import { postsAPI, likesAPI, followsAPI } from "@/shared/services/api";
-import { Feed, CommentsModal } from "@/modules/posts/components";
-import { Spinner } from "@/shared/components";
+import { postsAPI, likesAPI, followsAPI } from "@/services/api";
+import { Feed, CommentsModal } from "@/components";
+import { Spinner } from "@/components";
 import type { PostProps, FeedTab } from "@/types/posts";
-import { useAuth } from "@/modules/auth/context/AuthContext";
-import { useBlocks } from "@/modules/blocks/context/BlockContext";
-import { useComments, useDraft } from "@/modules/posts/hooks";
-import { transformPost } from "@/shared/lib/transformPost";
-import { Button } from "@/shared/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { useBlocks } from "@/context/BlockContext";
+import { useComments, useDraft } from "@/hooks";
+import { transformPost } from "@/lib/transformPost";
+import { Button } from "@/ui/button";
 
 export default function HomePage() {
   const { user } = useAuth();

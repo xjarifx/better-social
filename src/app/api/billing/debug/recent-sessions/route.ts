@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { successResponse, handleApiError } from "@/shared/lib/errors";
-import { prisma } from "@/shared/lib/prisma";
+import { authenticateRequest } from "@/utils/auth";
+import { successResponse, handleApiError } from "@/lib/errors";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {

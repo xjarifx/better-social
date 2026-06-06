@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import SafeImage from "@/shared/components/SafeImage";
-import { useAuth } from "@/modules/auth/context/AuthContext";
+import SafeImage from "@/components/SafeImage";
+import { useAuth } from "@/context/AuthContext";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
-import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
+import { Input } from "@/ui/input";
+import { Button } from "@/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();

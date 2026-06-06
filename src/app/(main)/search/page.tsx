@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { usersAPI } from "@/shared/services/api";
+import { usersAPI } from "@/services/api";
 import type { User } from "@/types/api";
-import { useAuth } from "@/modules/auth/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { Search } from "lucide-react";
 import {
   LoadingSkeleton,
   UserCard,
   ErrorMessage,
   Spinner,
-} from "@/shared/components";
+} from "@/components";
 
 export default function SearchPage() {
   const router = useRouter();

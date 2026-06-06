@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { followUser } from "@/modules/users/services/follows.service";
-import { successResponse, handleApiError } from "@/shared/lib/errors";
+import { authenticateRequest } from "@/utils/auth";
+import { followUser } from "@/services/follows";
+import { successResponse, handleApiError } from "@/lib/errors";
 
 export async function POST(
   request: NextRequest,

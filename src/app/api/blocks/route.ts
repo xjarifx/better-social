@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { blockUser, unblockUser, getBlockedUsers } from "@/modules/blocks/services/blocks.service";
-import { successResponse, handleApiError, AppError } from "@/shared/lib/errors";
-import { parsePaginationParams } from "@/shared/lib/pagination";
+import { authenticateRequest } from "@/utils/auth";
+import { blockUser, unblockUser, getBlockedUsers } from "@/services/blocks";
+import { successResponse, handleApiError, AppError } from "@/lib/errors";
+import { parsePaginationParams } from "@/lib/pagination";
 
 const blockSchema = z.object({
   username: z.string().min(1),

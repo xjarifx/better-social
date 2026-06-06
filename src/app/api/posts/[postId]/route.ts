@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { authenticateRequest, authenticateOptional } from "@/modules/auth/utils/auth";
-import { getPostById, updatePost, deletePost } from "@/modules/posts/services/posts.service";
-import { successResponse, handleApiError, AppError } from "@/shared/lib/errors";
+import { authenticateRequest, authenticateOptional } from "@/utils/auth";
+import { getPostById, updatePost, deletePost } from "@/services/posts";
+import { successResponse, handleApiError, AppError } from "@/lib/errors";
 
 const updatePostSchema = z.object({
   content: z.string().max(100).optional(),

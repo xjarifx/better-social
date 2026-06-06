@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { authenticateRequest } from "@/modules/auth/utils/auth";
-import { createComment, getComments } from "@/modules/posts/services/comments.service";
-import { successResponse, handleApiError, AppError } from "@/shared/lib/errors";
-import { parsePaginationParams } from "@/shared/lib/pagination";
+import { authenticateRequest } from "@/utils/auth";
+import { createComment, getComments } from "@/services/comments";
+import { successResponse, handleApiError, AppError } from "@/lib/errors";
+import { parsePaginationParams } from "@/lib/pagination";
 
 const createCommentSchema = z.object({
   content: z.string().min(1).max(500),

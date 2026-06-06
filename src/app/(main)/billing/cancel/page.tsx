@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/ui/button";
 import { X } from "lucide-react";
 
 export default function BillingCancelPage() {

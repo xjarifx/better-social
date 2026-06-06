@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { authenticateOptional } from "@/modules/auth/utils/auth";
-import { getUserPosts } from "@/modules/users/services/user.service";
-import { successResponse, handleApiError } from "@/shared/lib/errors";
-import { parsePaginationParams } from "@/shared/lib/pagination";
+import { authenticateOptional } from "@/utils/auth";
+import { getUserPosts } from "@/services/user";
+import { successResponse, handleApiError } from "@/lib/errors";
+import { parsePaginationParams } from "@/lib/pagination";
 
 export async function GET(
   request: NextRequest,

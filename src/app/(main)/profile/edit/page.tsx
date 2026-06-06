@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ChevronLeft } from "lucide-react";
-import { usersAPI } from "@/shared/services/api";
+import { usersAPI } from "@/services/api";
 import type { User } from "@/types/api";
-import { useAuth } from "@/modules/auth/context/AuthContext";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
-import { PageTransition, Spinner } from "@/shared/components";
+import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
+import { PageTransition, Spinner } from "@/components";
 
 export default function EditProfilePage() {
   const { user } = useAuth();
