@@ -6,7 +6,7 @@ export async function followUser(followerId: string, followingId: string) {
     throw new AppError("Cannot follow yourself", 400);
   }
 
-  const user = await prisma.user.findUnique({ where: { id: followingId } });
+  const user = await prisma.user.findFirst({ where: { id: followingId, deletedAt: null } });
   if (!user) throw new AppError("User not found", 404);
 
   const blockExists = await prisma.block.findFirst({

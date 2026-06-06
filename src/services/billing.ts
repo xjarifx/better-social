@@ -103,6 +103,7 @@ async function activateProPlan(
   return updated;
 }
 
+/** Returns the current user's billing status, plan details, and PRO price info. */
 export async function getBillingStatus(userId: string) {
   await syncUserPlanExpiration(userId);
 
@@ -130,6 +131,7 @@ export async function getBillingStatus(userId: string) {
   };
 }
 
+/** Creates a Stripe Checkout Session for PRO subscription. */
 export async function createCheckoutSession(userId: string) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new AppError("User not found", 404);

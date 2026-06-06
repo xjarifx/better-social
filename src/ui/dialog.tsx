@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
@@ -26,7 +26,7 @@ const DialogOverlay = React.forwardRef<
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.15 }}
-      {...(props as any)}
+      {...(props as HTMLMotionProps<"div">)}
     />
   </DialogPrimitive.Overlay>
 ));
@@ -51,7 +51,7 @@ const DialogContent = React.forwardRef<
         animate={{ opacity: 1, scale: 1, y: "0" }}
         exit={{ opacity: 0, scale: 0.95, y: "-2rem" }}
         transition={{ duration: 0.15 }}
-        {...(props as any)}
+        {...(props as HTMLMotionProps<"div">)}
       >
         {children}
         <DialogPrimitive.Close asChild>

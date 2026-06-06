@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { AppError } from "@/lib/errors";
 
 export async function blockUser(blockerId: string, username: string) {
-  const userToBlock = await prisma.user.findUnique({ where: { username } });
+  const userToBlock = await prisma.user.findFirst({ where: { username, deletedAt: null } });
   if (!userToBlock) throw new AppError("User not found", 404);
 
   if (blockerId === userToBlock.id) {
@@ -32,7 +32,7 @@ export async function blockUser(blockerId: string, username: string) {
 }
 
 export async function unblockUser(blockerId: string, username: string) {
-  const userToUnblock = await prisma.user.findUnique({ where: { username } });
+  const userToUnblock = await prisma.user.findFirst({ where: { username, deletedAt: null } });
   if (!userToUnblock) throw new AppError("User not found", 404);
 
   if (blockerId === userToUnblock.id) {
@@ -63,7 +63,7 @@ export async function getBlockedUsers(
   offset: number = 0,
 ) {
   const blockedUsers = await prisma.block.findMany({
-    where: { blockerId: userId },
+    where: { blockerId: userId, blocked: { deletedAt: null } },
     include: {
       blocked: {
         select: {
@@ -78,7 +78,7 @@ export async function getBlockedUsers(
     take: limit,
   });
 
-  return blockedUsers.map((b: { blocked: any }) => b.blocked);
+  return blockedUsers.map((b) => b.blocked);
 }
 
 export async function checkBlockStatus(userId: string, targetUserId: string) {

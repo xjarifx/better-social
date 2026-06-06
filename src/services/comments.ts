@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@/generated/prisma";
 import { AppError } from "@/lib/errors";
 
 async function countCommentSubtree(commentId: string): Promise<number> {
@@ -29,21 +30,21 @@ export async function createComment(
   const { postId, content, parentId } = body;
   const authorId = userId;
 
-  const post = await prisma.post.findUnique({
-    where: { id: postId },
+  const post = await prisma.post.findFirst({
+    where: { id: postId, deletedAt: null, author: { deletedAt: null } },
     select: { id: true, authorId: true },
   });
   if (!post) throw new AppError("Post not found", 404);
 
   if (parentId) {
     const parent = await prisma.comment.findFirst({
-      where: { id: parentId, postId },
+      where: { id: parentId, postId, deletedAt: null },
     });
     if (!parent) throw new AppError("Parent comment not found", 404);
     if (parent.parentId) throw new AppError("Cannot reply to a reply", 400);
   }
 
-  const result = await prisma.$transaction(async (tx: any) => {
+  const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const comment = await tx.comment.create({
       data: {
         content,
@@ -95,7 +96,7 @@ export async function getComments(
   const offset = query.offset ?? 0;
   const parentId = query.parentId ?? null;
 
-  const post = await prisma.post.findUnique({ where: { id: postId } });
+  const post = await prisma.post.findFirst({ where: { id: postId, deletedAt: null } });
   if (!post) throw new AppError("Post not found", 404);
 
   const total = await prisma.comment.count({
@@ -115,23 +116,36 @@ export async function getComments(
     _count: { select: { replies: true } },
   };
 
-  let comments: any[] = [];
+  let comments: Array<{
+    id: string;
+    content: string;
+    author: {
+      id: string;
+      username: string;
+      firstName: string;
+      lastName: string;
+      plan: "FREE" | "PRO";
+    };
+    _count: { replies: number };
+    postId: string;
+    parentId: string | null;
+    likesCount: number;
+    createdAt: Date;
+  }> = [];
+
+  const commentFilter = { postId, parentId, deletedAt: null };
 
   if (!userId) {
     comments = await prisma.comment.findMany({
-      where: { postId, parentId },
+      where: commentFilter,
       include: includeAuthor,
       orderBy: { createdAt: "desc" },
       take: limit,
       skip: offset,
     });
   } else {
-    const userWhere = { postId, authorId: userId, parentId };
-    const otherWhere = {
-      postId,
-      parentId,
-      NOT: { authorId: userId },
-    };
+    const userWhere = { ...commentFilter, authorId: userId };
+    const otherWhere = { ...commentFilter, NOT: { authorId: userId } };
     const userCount = await prisma.comment.count({ where: userWhere });
 
     if (offset < userCount) {
@@ -196,7 +210,7 @@ export async function updateComment(
   const { commentId } = params;
   const { content } = body;
 
-  const comment = await prisma.comment.findUnique({ where: { id: commentId } });
+  const comment = await prisma.comment.findFirst({ where: { id: commentId, deletedAt: null } });
   if (!comment) throw new AppError("Comment not found", 404);
   if (comment.authorId !== userId) throw new AppError("Cannot update other user's comment", 403);
 
@@ -235,14 +249,17 @@ export async function deleteComment(
 ) {
   const { commentId } = params;
 
-  const comment = await prisma.comment.findUnique({ where: { id: commentId } });
+  const comment = await prisma.comment.findFirst({ where: { id: commentId, deletedAt: null } });
   if (!comment) throw new AppError("Comment not found", 404);
   if (comment.authorId !== userId) throw new AppError("Cannot delete other user's comment", 403);
 
   const subtreeCount = await countCommentSubtree(commentId);
 
-  await prisma.$transaction(async (tx: any) => {
-    await tx.comment.delete({ where: { id: commentId } });
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    await tx.comment.update({
+      where: { id: commentId },
+      data: { deletedAt: new Date() },
+    });
     await tx.post.update({
       where: { id: comment.postId },
       data: { commentsCount: { decrement: subtreeCount } },
@@ -268,7 +285,7 @@ export async function likeComment(
   });
   if (existingLike) throw new AppError("Comment already liked", 400);
 
-  const result = await prisma.$transaction(async (tx: any) => {
+  const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const like = await tx.commentLike.create({
       data: { userId, commentId },
     });
@@ -304,7 +321,7 @@ export async function unlikeComment(
   });
   if (!existingLike) throw new AppError("Like not found", 404);
 
-  await prisma.$transaction(async (tx: any) => {
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     await tx.commentLike.delete({
       where: { userId_commentId: { userId, commentId } },
     });

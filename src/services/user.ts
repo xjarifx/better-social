@@ -5,8 +5,8 @@ import { syncUserPlanExpiration } from "@/services/billing";
 export async function getProfile(userId: string) {
   await syncUserPlanExpiration(userId);
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
+  const user = await prisma.user.findFirst({
+    where: { id: userId, deletedAt: null },
     select: {
       id: true,
       username: true,
@@ -25,8 +25,8 @@ export async function getProfile(userId: string) {
 export async function getCurrentProfile(userId: string) {
   await syncUserPlanExpiration(userId);
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
+  const user = await prisma.user.findFirst({
+    where: { id: userId, deletedAt: null },
     select: {
       id: true,
       username: true,
@@ -46,7 +46,7 @@ export async function updateProfile(
   userId: string,
   data: { firstName?: string; lastName?: string },
 ) {
-  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const user = await prisma.user.findFirst({ where: { id: userId, deletedAt: null } });
   if (!user) throw new AppError("User not found", 404);
 
   const { firstName, lastName } = data;
@@ -76,7 +76,7 @@ export async function getUserPosts(
   offset: number = 0,
   viewerId?: string,
 ) {
-  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const user = await prisma.user.findFirst({ where: { id: userId, deletedAt: null } });
   if (!user) throw new AppError("User not found", 404);
 
   if (viewerId && viewerId !== userId) {
@@ -124,25 +124,20 @@ export async function getUserPosts(
     },
   });
 
-  const response = {
-    posts: posts.map((p: any) => ({
-      id: p.id,
-      content: p.content,
-      imageUrl: p.imageUrl,
-      visibility: p.visibility,
-      author: p.author,
-      likesCount: p.likesCount,
-      commentsCount: p.commentsCount,
-      likes: p.likes.map((l: { userId: string }) => l.userId),
-      createdAt: p.createdAt,
-      updatedAt: p.updatedAt,
-    } as any)),
-    total,
-    limit,
-    offset,
-  };
+  const mapped = posts.map((p) => ({
+    id: p.id,
+    content: p.content,
+    imageUrl: p.imageUrl,
+    visibility: p.visibility,
+    author: p.author,
+    likesCount: p.likesCount,
+    commentsCount: p.commentsCount,
+    likes: p.likes.map((l) => l.userId),
+    createdAt: p.createdAt,
+    updatedAt: p.updatedAt,
+  }));
 
-  return response;
+  return { posts: mapped, total, limit, offset };
 }
 
 export async function searchUsers(
@@ -150,7 +145,10 @@ export async function searchUsers(
   limit: number = 10,
   offset: number = 0,
 ) {
-  const whereClause: any = {
+  const whereClause: {
+    OR: Array<{ [key: string]: { contains: string; mode: "insensitive" } }>;
+    deletedAt: null;
+  } = {
     OR: [
       { firstName: { contains: query, mode: "insensitive" } },
       { lastName: { contains: query, mode: "insensitive" } },
@@ -190,7 +188,7 @@ export async function getUserFollowers(userId: string) {
     },
   });
 
-  return followers.map((f: any) => ({
+  return followers.map((f) => ({
     id: f.id,
     followedAt: f.createdAt,
     follower: f.follower,
@@ -207,7 +205,7 @@ export async function getUserFollowing(userId: string) {
     },
   });
 
-  return following.map((f: any) => ({
+  return following.map((f) => ({
     id: f.id,
     followedAt: f.createdAt,
     user: f.following,

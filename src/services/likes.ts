@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@/generated/prisma";
 import { AppError } from "@/lib/errors";
 
 export async function likePost(
@@ -7,43 +8,40 @@ export async function likePost(
 ) {
   const { postId } = params;
 
-  const post = await prisma.post.findUnique({
-    where: { id: postId },
+  const post = await prisma.post.findFirst({
+    where: { id: postId, deletedAt: null },
     select: { id: true, authorId: true },
   });
   if (!post) throw new AppError("Post not found", 404);
 
-  const existingLike = await prisma.like.findUnique({
-    where: { userId_postId: { userId, postId } },
+  const existingLike = await prisma.like.findFirst({
+    where: { userId, postId, deletedAt: null },
   });
   if (existingLike) throw new AppError("Post already liked", 400);
 
-  const result = await prisma.$transaction(async (tx: any) => {
-    const like = await tx.like.create({
-      data: { userId, postId },
-      include: {
-        user: {
-          select: { id: true, username: true, firstName: true, lastName: true },
-        },
-      },
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const softDeleted = await tx.like.findFirst({
+      where: { userId, postId, deletedAt: { not: null } },
     });
+
+    if (softDeleted) {
+      await tx.like.update({
+        where: { id: softDeleted.id },
+        data: { deletedAt: null },
+      });
+    } else {
+      await tx.like.create({
+        data: { userId, postId },
+      });
+    }
 
     await tx.post.update({
       where: { id: postId },
       data: { likesCount: { increment: 1 } },
     });
-
-    return like;
   });
 
-  return {
-    id: result.id,
-    userId: result.userId,
-    postId: result.postId,
-    user: result.user,
-    createdAt: result.createdAt,
-    message: "Post liked successfully",
-  };
+  return { userId, postId, message: "Post liked successfully" };
 }
 
 export async function unlikePost(
@@ -52,7 +50,7 @@ export async function unlikePost(
 ) {
   const { postId } = params;
 
-  const post = await prisma.post.findUnique({ where: { id: postId } });
+  const post = await prisma.post.findFirst({ where: { id: postId, deletedAt: null } });
   if (!post) throw new AppError("Post not found", 404);
 
   const existingLike = await prisma.like.findUnique({
@@ -60,9 +58,10 @@ export async function unlikePost(
   });
   if (!existingLike) throw new AppError("Like not found", 404);
 
-  await prisma.$transaction(async (tx: any) => {
-    await tx.like.delete({
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    await tx.like.update({
       where: { userId_postId: { userId, postId } },
+      data: { deletedAt: new Date() },
     });
     await tx.post.update({
       where: { id: postId },
@@ -99,7 +98,7 @@ export async function getPostLikes(
   const total = await prisma.like.count({ where: { postId } });
 
   return {
-    likes: likes.map((l: any) => ({
+    likes: likes.map((l) => ({
       id: l.id,
       userId: l.userId,
       postId: l.postId,

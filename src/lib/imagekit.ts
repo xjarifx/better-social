@@ -1,8 +1,13 @@
 import ImageKit from "@imagekit/nodejs";
 
 const privateKey = process.env.IMAGEKIT_PRIVATE_KEY!;
-process.env.IMAGEKIT_PUBLIC_KEY!;
-process.env.IMAGEKIT_URL_ENDPOINT!;
+
+const publicKey = process.env.IMAGEKIT_PUBLIC_KEY!;
+const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT!;
+
+if (!privateKey || !publicKey || !urlEndpoint) {
+  throw new Error("Missing ImageKit environment variables");
+}
 
 const imagekit = new ImageKit({
   privateKey,

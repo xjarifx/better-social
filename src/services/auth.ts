@@ -18,6 +18,7 @@ function getJwtSecret() {
   }
 }
 
+/** Creates a signed JWT for the given user ID. */
 const generateToken = (userId: string): string => {
   const jwtSecret = getJwtSecret();
   return jwt.sign({ userId }, jwtSecret, {
@@ -40,6 +41,7 @@ function validatePasswordStrength(password: string) {
   }
 }
 
+/** Validates password strength, checks for duplicate email/username, creates the user, and returns a JWT. */
 export async function register(data: {
   email: string;
   username: string;
@@ -84,6 +86,7 @@ export async function register(data: {
   }
 }
 
+/** Authenticates a user by email/password and returns a JWT. */
 export async function login(email: string, password: string) {
   try {
     const user = await prisma.user.findUnique({ where: { email } });

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const Card = React.forwardRef<
@@ -17,7 +17,7 @@ const Card = React.forwardRef<
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)"
     }}
     transition={{ duration: 0.15 }}
-    {...(props as any)}
+    {...(props as HTMLMotionProps<"div">)}
   />
 ));
 Card.displayName = "Card";
