@@ -8,4 +8,4 @@
   - [Architecture](./docs/architecture.md) — project structure, routing, component tree, auth flow
   - [Database](./docs/database.md) — schema, models, relations, indexes
   - [API](./docs/api.md) — full API reference, endpoints, request/response formats, error codes
-  - Interactive Swagger UI at `/api-docs` when the server is running
+

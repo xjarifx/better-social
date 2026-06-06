@@ -102,6 +102,4 @@ Paginated endpoints accept `limit` (default 20) and `offset` (default 0) and ret
 - Sent as `multipart/form-data`, base64-encoded for ImageKit API
 - Requires `IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_URL_ENDPOINT`
 
-## Interactive Docs
 
-Full OpenAPI 3.0.3 spec at `/api-docs` when the server is running.

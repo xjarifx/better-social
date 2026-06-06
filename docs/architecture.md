@@ -11,7 +11,7 @@ app/                  Next.js App Router
   (auth)/             Auth pages (login, register)
   (main)/             Main app pages (feed, profile, search, billing, etc.)
   api/v1/             API route handlers (auth, posts, users, comments, likes, follows, blocks, billing, health)
-  api-docs/           Swagger UI page
+
 components/           React components
   ui/                 Primitive UI components (button, input, dialog, etc.)
   theme/              Theme-related components
@@ -28,7 +28,7 @@ lib/                  Core application logic
   prisma.ts           Prisma client singleton
   env.ts              Environment variable helpers
   errors.ts           Custom error classes
-  openapi.ts          OpenAPI 3.0.3 spec for Swagger UI
+
   pagination.ts       Pagination helpers
   rate-limit.ts       Rate limiting utilities
   imagekit.ts         ImageKit upload client
