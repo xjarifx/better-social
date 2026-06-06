@@ -12,12 +12,7 @@ import {
   ErrorMessage,
 } from "@/shared/components";
 import { Button } from "@/shared/ui/button";
-
-interface PostComposerProps {
-  onPostCreated?: () => void;
-  placeholder?: string;
-  className?: string;
-}
+import type { PostComposerProps } from "@/types/posts";
 
 export function PostComposer({
   onPostCreated,

@@ -1,18 +1,6 @@
 import { ChevronLeft } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-interface PageHeaderProps {
-  title: string;
-  subtitle?: string;
-  showBackButton?: boolean;
-  backPath?: string;
-  action?: {
-    icon: LucideIcon;
-    onClick: () => void;
-    label: string;
-  };
-}
+import type { PageHeaderProps } from "@/types/shared";
 
 export function PageHeader({
   title,

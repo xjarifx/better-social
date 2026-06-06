@@ -1,13 +1,4 @@
-import type { LucideIcon } from "lucide-react";
-
-interface ActionButtonProps {
-  icon: LucideIcon;
-  count: number;
-  isActive?: boolean;
-  onClick?: () => void;
-  activeColor?: string;
-  className?: string;
-}
+import type { ActionButtonProps } from "@/types/shared";
 
 export function ActionButton({
   icon: Icon,

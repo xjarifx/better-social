@@ -3,12 +3,12 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { usersAPI, followsAPI, likesAPI, blocksAPI } from "@/shared/services/api";
-import type { User, Follower } from "@/shared/services/api";
+import type { User, Follower } from "@/types/api";
 import { useAuth } from "@/modules/auth/context/AuthContext";
 import { useBlocks } from "@/modules/blocks/context/BlockContext";
 import { Feed, CommentsModal, ProBadge } from "@/modules/posts/components";
 import { Spinner } from "@/shared/components";
-import type { PostProps } from "@/modules/posts/components/PostCard";
+import type { PostProps } from "@/types/posts";
 import { useComments } from "@/modules/posts/hooks";
 import { transformPost } from "@/shared/lib/transformPost";
 import { Button } from "@/shared/ui/button";

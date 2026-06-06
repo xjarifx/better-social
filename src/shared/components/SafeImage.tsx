@@ -1,8 +1,5 @@
-import Image, { ImageProps } from "next/image";
-
-type SafeImageProps = ImageProps & {
-  suppressHydrationWarning?: boolean;
-};
+import Image from "next/image";
+import type { SafeImageProps } from "@/types/shared";
 
 export default function SafeImage(props: SafeImageProps) {
   return <Image {...props} suppressHydrationWarning />;

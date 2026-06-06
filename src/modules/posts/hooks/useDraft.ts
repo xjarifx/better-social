@@ -1,9 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-
-interface DraftData {
-  content: string;
-  timestamp: number;
-}
+import type { DraftData } from "@/types/posts";
 
 const DRAFT_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { usersAPI, type User } from "@/shared/services/api";
+import { usersAPI } from "@/shared/services/api";
+import type { User } from "@/types/api";
 import { useAuth } from "@/modules/auth/context/AuthContext";
 import { Search } from "lucide-react";
 import {

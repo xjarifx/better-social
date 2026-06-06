@@ -3,23 +3,8 @@ import { memo } from "react";
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { PostCard } from "@/modules/posts/components/PostCard";
-import type { PostProps } from "@/modules/posts/components/PostCard";
 import { LoadingSkeleton, EmptyState } from "@/shared/components";
-
-interface FeedProps {
-  posts: PostProps[];
-  isLoading?: boolean;
-  showPostMenu?: boolean;
-  onLike?: (postId: string) => void | Promise<void>;
-  onReply?: (postId: string) => void;
-  onFollowToggle?: (
-    authorId: string,
-    isFollowing: boolean,
-  ) => void | Promise<void>;
-  onEdit?: (postId: string, content: string) => void | Promise<void>;
-  onDelete?: (postId: string) => void | Promise<void>;
-  renderPostFooter?: (post: PostProps) => React.ReactNode;
-}
+import type { PostProps, FeedProps } from "@/types/posts";
 
 function FeedComponent({
   posts,

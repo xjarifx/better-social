@@ -1,11 +1,4 @@
-import type { LucideIcon } from "lucide-react";
-
-interface EmptyStateProps {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  iconClassName?: string;
-}
+import type { EmptyStateProps } from "@/types/shared";
 
 export function EmptyState({
   icon: Icon,

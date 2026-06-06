@@ -1,26 +1,14 @@
 "use client";
 import { PostCard } from "@/modules/posts/components/PostCard";
-import type { PostProps } from "@/modules/posts/components/PostCard";
 import { ProBadge } from "@/modules/posts/components/ProBadge";
-import type { Comment as ApiComment } from "@/shared/services/api";
+import type { Comment as ApiComment } from "@/types/api";
 import { useAuth } from "@/modules/auth/context/AuthContext";
 import { Spinner } from "@/shared/components";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-import type { UseCommentsReturn } from "@/modules/posts/hooks/useComments";
 import { Heart, MessageCircle } from "lucide-react";
-
-interface CommentsModalProps {
-  post: PostProps;
-  commentsApi: UseCommentsReturn;
-  onClose: () => void;
-  onLike: (postId: string) => void | Promise<void>;
-  onFollowToggle?: (
-    authorId: string,
-    isFollowing: boolean,
-  ) => void | Promise<void>;
-}
+import type { CommentsModalProps } from "@/types/posts";
 
 export function CommentsModal({
   post,

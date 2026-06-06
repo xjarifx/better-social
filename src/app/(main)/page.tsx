@@ -5,14 +5,12 @@ import { Image, Globe, Lock } from "lucide-react";
 import { postsAPI, likesAPI, followsAPI } from "@/shared/services/api";
 import { Feed, CommentsModal } from "@/modules/posts/components";
 import { Spinner } from "@/shared/components";
-import type { PostProps } from "@/modules/posts/components/PostCard";
+import type { PostProps, FeedTab } from "@/types/posts";
 import { useAuth } from "@/modules/auth/context/AuthContext";
 import { useBlocks } from "@/modules/blocks/context/BlockContext";
 import { useComments, useDraft } from "@/modules/posts/hooks";
 import { transformPost } from "@/shared/lib/transformPost";
 import { Button } from "@/shared/ui/button";
-
-type FeedTab = "following" | "forYou";
 
 export default function HomePage() {
   const { user } = useAuth();

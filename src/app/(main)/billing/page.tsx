@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { billingAPI } from "@/shared/services/api";
-import type { BillingStatus } from "@/shared/services/api";
+import type { BillingStatus } from "@/types/api";
 import { Button } from "@/shared/ui/button";
 import { Check, Sparkles, RefreshCw } from "lucide-react";
 import { useAuth } from "@/modules/auth/context/AuthContext";

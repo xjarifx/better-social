@@ -24,34 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/shared/ui/dropdown-menu";
-
-export interface PostProps {
-  id: string;
-  authorId?: string;
-  author: {
-    name: string;
-    handle: string;
-    avatar: string;
-  };
-  authorPlan?: "FREE" | "PRO";
-  content: string;
-  image?: string;
-  visibility?: "PUBLIC" | "PRIVATE";
-  timestamp: string;
-  likes: number;
-  replies: number;
-  liked?: boolean;
-  isFollowing?: boolean;
-  showPostMenu?: boolean;
-  onLike?: (id: string) => void | Promise<void>;
-  onReply?: (id: string) => void;
-  onFollowToggle?: (
-    authorId: string,
-    isFollowing: boolean,
-  ) => void | Promise<void>;
-  onEdit?: (id: string, content: string) => void | Promise<void>;
-  onDelete?: (id: string) => void | Promise<void>;
-}
+import type { PostProps } from "@/types/posts";
 
 function PostCardComponent({
   id,

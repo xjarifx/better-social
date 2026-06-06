@@ -1,16 +1,6 @@
 import Link from "next/link";
 import { ProBadge } from "@/modules/posts/components/ProBadge";
-
-interface UserInfoProps {
-  name: string;
-  handle: string;
-  plan?: "FREE" | "PRO";
-  userId?: string;
-  currentUserId?: string;
-  showHandle?: boolean;
-  size?: "sm" | "md";
-  className?: string;
-}
+import type { UserInfoProps } from "@/types/shared";
 
 export function UserInfo({
   name,

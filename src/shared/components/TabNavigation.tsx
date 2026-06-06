@@ -1,14 +1,4 @@
-interface Tab {
-  id: string;
-  label: string;
-}
-
-interface TabNavigationProps {
-  tabs: Tab[];
-  activeTab: string;
-  onTabChange: (tabId: string) => void;
-  className?: string;
-}
+import type { Tab, TabNavigationProps } from "@/types/shared";
 
 export function TabNavigation({
   tabs,

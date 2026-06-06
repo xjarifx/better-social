@@ -1,10 +1,6 @@
 import { motion } from "framer-motion";
 import { pageVariants } from "@/shared/lib/motion";
-
-interface PageTransitionProps {
-  children: React.ReactNode;
-  className?: string;
-}
+import type { PageTransitionProps } from "@/types/shared";
 
 export function PageTransition({ children, className }: PageTransitionProps) {
   return (

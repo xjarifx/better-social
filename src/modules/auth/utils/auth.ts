@@ -1,11 +1,8 @@
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 import { AuthError } from "@/shared/lib/errors";
+import type { AuthResult } from "@/types/auth";
 const JWT_SECRET = process.env.JWT_SECRET!;
-
-export interface AuthResult {
-  userId: string;
-}
 
 export function getTokenFromRequest(request: NextRequest): string | null {
   const authHeader = request.headers.get("authorization");

@@ -1,48 +1,7 @@
 import { useState, useCallback } from "react";
 import { commentsAPI } from "@/shared/services/api";
-import type { Comment as ApiComment } from "@/shared/services/api";
-
-interface CommentMeta {
-  total: number;
-  limit: number;
-  offset: number;
-}
-
-export interface UseCommentsReturn {
-  openCommentsPostId: string | null;
-  commentsByPost: Record<string, ApiComment[]>;
-  commentMetaByPost: Record<string, CommentMeta>;
-  repliesByComment: Record<string, ApiComment[]>;
-  replyMetaByComment: Record<string, CommentMeta>;
-  repliesExpanded: Record<string, boolean>;
-  replyDrafts: Record<string, string>;
-  repliesLoading: Record<string, boolean>;
-  repliesMoreLoading: Record<string, boolean>;
-  commentLikeState: Record<string, { liked: boolean; count: number }>;
-  editingCommentByPost: Record<string, string | null>;
-  commentEditDrafts: Record<string, string>;
-  commentDrafts: Record<string, string>;
-  commentsLoading: Record<string, boolean>;
-  commentsMoreLoading: Record<string, boolean>;
-  toggleComments: (postId: string) => Promise<void>;
-  handleAddComment: (postId: string) => Promise<void>;
-  handleAddReply: (postId: string, parentId: string) => Promise<void>;
-  toggleReplies: (postId: string, commentId: string) => Promise<void>;
-  handleLoadMoreReplies: (postId: string, commentId: string) => Promise<void>;
-  setReplyDraft: (commentId: string, value: string) => void;
-  handleToggleCommentLike: (postId: string, commentId: string) => Promise<void>;
-  handleStartEditComment: (postId: string, comment: ApiComment) => void;
-  handleCancelEditComment: (postId: string, commentId: string) => void;
-  handleSaveEditComment: (postId: string, commentId: string) => Promise<void>;
-  handleDeleteComment: (postId: string, commentId: string) => Promise<void>;
-  handleLoadMoreComments: (postId: string) => Promise<void>;
-  handleCloseComments: () => void;
-  setCommentDraft: (postId: string, value: string) => void;
-  setCommentEditDraft: (commentId: string, value: string) => void;
-  /** Must be called by the consumer to update its posts state reply count */
-  onReplyCountChange: ((postId: string, delta: number) => void) | null;
-  setOnReplyCountChange: (cb: (postId: string, delta: number) => void) => void;
-}
+import type { Comment as ApiComment } from "@/types/api";
+import type { CommentMeta, UseCommentsReturn } from "@/types/posts";
 
 const PAGE_SIZE = 5;
 

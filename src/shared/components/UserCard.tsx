@@ -1,23 +1,7 @@
 import { Avatar } from "./Avatar";
 import { UserInfo } from "./UserInfo";
 import { Button } from "@/shared/ui/button";
-
-interface UserCardProps {
-  user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    username: string;
-    plan?: "FREE" | "PRO";
-  };
-  currentUserId?: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-    disabled?: boolean;
-    variant?: "default" | "outline" | "ghost";
-  };
-}
+import type { UserCardProps } from "@/types/shared";
 
 export function UserCard({ user, currentUserId, action }: UserCardProps) {
   const initials = `${user.firstName[0]}${user.lastName[0]}`;

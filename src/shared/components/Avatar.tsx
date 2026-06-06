@@ -1,9 +1,4 @@
-interface AvatarProps {
-  initials: string;
-  size?: "sm" | "md" | "lg" | "xl";
-  variant?: "default" | "primary" | "secondary";
-  className?: string;
-}
+import type { AvatarProps } from "@/types/shared";
 
 const sizeClasses = {
   sm: "h-7 w-7 text-[10px]",

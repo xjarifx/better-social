@@ -1,7 +1,4 @@
-interface MediaPreviewProps {
-  file: File;
-  onRemove: () => void;
-}
+import type { MediaPreviewProps } from "@/types/shared";
 
 export function MediaPreview({ file, onRemove }: MediaPreviewProps) {
   return (

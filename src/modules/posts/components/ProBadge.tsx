@@ -1,7 +1,4 @@
-interface ProBadgeProps {
-  isPro?: boolean;
-  className?: string;
-}
+import type { ProBadgeProps } from "@/types/posts";
 
 export function ProBadge({ isPro, className = "" }: ProBadgeProps) {
   if (!isPro) return null;

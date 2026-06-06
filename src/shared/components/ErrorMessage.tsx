@@ -1,7 +1,4 @@
-interface ErrorMessageProps {
-  message: string;
-  className?: string;
-}
+import type { ErrorMessageProps } from "@/types/shared";
 
 export function ErrorMessage({ message, className = "" }: ErrorMessageProps) {
   return (

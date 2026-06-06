@@ -1,7 +1,4 @@
-interface LoadingSkeletonProps {
-  variant?: "post" | "user" | "list";
-  count?: number;
-}
+import type { LoadingSkeletonProps } from "@/types/shared";
 
 export function LoadingSkeleton({
   variant = "post",

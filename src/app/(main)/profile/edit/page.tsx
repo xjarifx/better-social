@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ChevronLeft } from "lucide-react";
 import { usersAPI } from "@/shared/services/api";
-import type { User } from "@/shared/services/api";
+import type { User } from "@/types/api";
 import { useAuth } from "@/modules/auth/context/AuthContext";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";

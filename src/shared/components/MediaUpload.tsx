@@ -1,12 +1,6 @@
 import { Image } from "lucide-react";
 import { useCallback } from "react";
-
-interface MediaUploadProps {
-  onFileSelect: (file: File | null) => void;
-  maxSizeBytes?: number;
-  accept?: string;
-  className?: string;
-}
+import type { MediaUploadProps } from "@/types/shared";
 
 export function MediaUpload({
   onFileSelect,

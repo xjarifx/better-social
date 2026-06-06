@@ -1,10 +1,5 @@
 import { Globe, Lock } from "lucide-react";
-
-interface VisibilityToggleProps {
-  visibility: "PUBLIC" | "PRIVATE";
-  onToggle: () => void;
-  className?: string;
-}
+import type { VisibilityToggleProps } from "@/types/shared";
 
 export function VisibilityToggle({
   visibility,

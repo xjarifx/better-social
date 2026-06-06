@@ -8,12 +8,7 @@ import { useDraft } from "@/modules/posts/hooks/useDraft";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
 import { Textarea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
-
-interface PostComposerModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  mediaPickerRequestId?: number;
-}
+import type { PostComposerModalProps } from "@/types/posts";
 
 export function PostComposerModal({
   open,

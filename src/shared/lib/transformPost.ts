@@ -1,6 +1,6 @@
-import type { Post } from "@/shared/services/api";
+import type { Post } from "@/types/api";
 import { API_ROOT_URL } from "@/shared/services/api";
-import type { PostProps } from "@/modules/posts/components/PostCard";
+import type { PostProps } from "@/types/posts";
 
 /**
  * Formats an ISO date string into a human-readable relative time.

@@ -15,10 +15,7 @@ import {
   DialogTitle,
 } from "@/shared/ui/dialog";
 import { Button } from "@/shared/ui/button";
-
-interface TopNavProps {
-  onOpenPostComposer?: () => void;
-}
+import type { TopNavProps } from "@/types/shared";
 
 export function TopNav({ onOpenPostComposer }: TopNavProps) {
   const { logout, user } = useAuth();

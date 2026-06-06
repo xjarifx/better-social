@@ -1,8 +1,4 @@
-interface CharacterCounterProps {
-  current: number;
-  limit: number;
-  className?: string;
-}
+import type { CharacterCounterProps } from "@/types/shared";
 
 export function CharacterCounter({
   current,

@@ -1,16 +1,8 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { blocksAPI } from "@/shared/services/api";
-import type { BlockedUser } from "@/shared/services/api";
+import type { BlockedUser } from "@/types/api";
 import { useAuth } from "@/modules/auth/context/AuthContext";
-
-interface BlockContextType {
-  blockedUsers: BlockedUser[];
-  isBlocked: (username: string) => boolean;
-  blockUser: (username: string) => Promise<void>;
-  unblockUser: (username: string) => Promise<void>;
-  refreshBlocks: () => Promise<void>;
-  isLoading: boolean;
-}
+import type { BlockContextType } from "@/types/blocks";
 
 const BlockContext = createContext<BlockContextType | undefined>(undefined);
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { blocksAPI } from "@/shared/services/api";
-import type { BlockedUser } from "@/shared/services/api";
+import type { BlockedUser } from "@/types/api";
 import { ShieldOff } from "lucide-react";
 
 export default function BlocksPage() {

@@ -9,16 +9,7 @@ import {
 } from "@/shared/ui/dialog";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
-
-interface EditPostModalProps {
-  editingContent: string;
-  visibility: "PUBLIC" | "PRIVATE";
-  isSaving: boolean;
-  onClose: () => void;
-  onSave: (content: string) => void;
-  onContentChange: (content: string) => void;
-  onVisibilityChange: (visibility: "PUBLIC" | "PRIVATE") => void;
-}
+import type { EditPostModalProps } from "@/types/posts";
 
 export function EditPostModal({
   editingContent,

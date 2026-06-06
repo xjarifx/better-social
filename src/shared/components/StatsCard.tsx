@@ -1,13 +1,4 @@
-interface Stat {
-  label: string;
-  value: number;
-  onClick?: () => void;
-}
-
-interface StatsCardProps {
-  stats: Stat[];
-  className?: string;
-}
+import type { Stat, StatsCardProps } from "@/types/shared";
 
 export function StatsCard({ stats, className = "" }: StatsCardProps) {
   return (
