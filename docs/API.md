@@ -1,6 +1,6 @@
 # API
 
-Base URL: `/api/v1`
+Base URL: `/api`
 
 ## Response Envelope
 
@@ -101,5 +101,3 @@ Paginated endpoints accept `limit` (default 20) and `offset` (default 0) and ret
 - Provider: ImageKit CDN. Upload path: `/better-media/posts/`
 - Sent as `multipart/form-data`, base64-encoded for ImageKit API
 - Requires `IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_URL_ENDPOINT`
-
-

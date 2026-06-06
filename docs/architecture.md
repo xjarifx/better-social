@@ -7,53 +7,88 @@ Better Media is a monorepo Next.js 16 application using the App Router for both 
 ## Project Structure
 
 ```
-app/                  Next.js App Router
-  (auth)/             Auth pages (login, register)
-  (main)/             Main app pages (feed, profile, search, billing, etc.)
-  api/v1/             API route handlers (auth, posts, users, comments, likes, follows, blocks, billing, health)
+src/
+  app/                  Next.js App Router
+    (auth)/             Auth pages (login, register)
+    (main)/             Main app pages (feed, profile, search, billing, etc.)
+    api/                API route handlers (auth, posts, users, comments, likes, follows, blocks, billing)
 
-components/           React components
-  ui/                 Primitive UI components (button, input, dialog, etc.)
-  theme/              Theme-related components
-  common/             Shared components
-  Feed.tsx            Feed component (post list)
-  PostCard.tsx        Individual post display
-  PostComposer.tsx    Post creation UI
-  CommentsModal.tsx   Comments/replies modal
-  TopNav.tsx          Top navigation bar
-  MobileNav.tsx       Mobile navigation
-  RightSidebar.tsx    Sidebar with suggestions/trends
-lib/                  Core application logic
-  auth.ts             JWT token verification
-  prisma.ts           Prisma client singleton
-  env.ts              Environment variable helpers
-  errors.ts           Custom error classes
+  components/           React components
+    index.ts            Barrel exports
+    Feed.tsx            Feed component (post list)
+    PostCard.tsx        Individual post display
+    PostComposer.tsx    Post creation UI
+    PostComposerModal.tsx Post creation modal
+    EditPostModal.tsx   Post editing modal
+    CommentsModal.tsx   Comments/replies modal
+    ProBadge.tsx        PRO plan badge
+    ProtectedRoute.tsx  Auth gate wrapper
+    TopNav.tsx          Top navigation bar
+    MobileNav.tsx       Mobile navigation
+    RightSidebar.tsx    Sidebar with suggestions/trends
+    Avatar.tsx          User avatar
+    Spinner.tsx         Loading spinner
+    EmptyState.tsx      Empty state placeholder
+    LoadingSkeleton.tsx Skeleton loader
+    ErrorMessage.tsx    Error display
+    UserCard.tsx        User card component
+    UserInfo.tsx        User info display
+    ThemeProvider.tsx   Theme context provider
+    PageTransition.tsx  Page transition wrapper
+    ...
 
-  pagination.ts       Pagination helpers
-  rate-limit.ts       Rate limiting utilities
-  imagekit.ts         ImageKit upload client
-  utils.ts            General utilities
-  transformPost.ts    Post data transformation helpers
-  context/            React context providers
-    AuthContext.tsx   Authentication state
-    BlockContext.tsx  Block state
-  hooks/              Custom React hooks
-    useComments.ts    Comments management
-    useDraft.ts       Draft post persistence
-  services/           API service layer (backend)
-    api.ts            Client-side API call wrapper
-    auth.service.ts   Auth logic
-    posts.service.ts  Post CRUD and feed logic
-    comments.service.ts Comment CRUD
-    likes.service.ts  Like/unlike logic
-    follows.service.ts Follow/unfollow logic
-    blocks.service.ts Block/unblock logic
-    billing.service.ts Stripe integration
-    user.service.ts   User profile logic
-generated/            Prisma client output
+  context/              React context providers
+    AuthContext.tsx     Authentication state
+    BlockContext.tsx    Block state
+
+  hooks/                Custom React hooks
+    useComments.ts      Comments management
+    useDraft.ts         Draft post persistence
+
+  lib/                  Core application logic
+    prisma.ts           Prisma client singleton
+    errors.ts           Custom error classes
+    pagination.ts       Pagination helpers
+    rate-limit.ts       Rate limiting utilities
+    imagekit.ts         ImageKit upload client
+    utils.ts            General utilities
+    transformPost.ts    Post data transformation helpers
+    motion.ts           Framer motion variants
+    theme.ts            Theme utilities
+
+  services/             Server-side business logic
+    auth.ts             Auth logic (register, login)
+    posts.ts            Post CRUD and feed logic
+    comments.ts         Comment CRUD
+    likes.ts            Like/unlike logic
+    follows.ts          Follow/unfollow logic
+    blocks.ts           Block/unblock logic
+    billing.ts          Stripe integration
+    user.ts             User profile logic
+    api.ts              Client-side API call wrapper
+
+  ui/                   Primitive UI components
+    index.ts            Barrel exports
+    button.tsx          Button component
+    input.tsx           Input component
+    textarea.tsx        Textarea component
+    dialog.tsx          Dialog/modal component
+    dropdown-menu.tsx   Dropdown menu component
+    card.tsx            Card component
+    tabs.tsx            Tabs component
+    avatar.tsx          Avatar UI primitive
+    tooltip.tsx         Tooltip component
+    separator.tsx       Separator component
+
+  utils/                Utility functions
+    auth.ts             JWT token helpers
+
+  types/                TypeScript type definitions
+
+generated/prisma/       Prisma client output
 prisma/
-  schema.prisma       Database schema
-  seed.ts             Sample data seeder
+  schema.prisma         Database schema
+  seed.ts               Sample data seeder
 ```
 
 ## Routing
