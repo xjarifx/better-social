@@ -1,11 +1,11 @@
 const BASE_URL = process.env.CLIENT_URL || "";
 const API_BASE_URL = BASE_URL
-  ? `${BASE_URL.replace(/\/$/, "")}/api/v1`
-  : "/api/v1";
+  ? `${BASE_URL.replace(/\/$/, "")}/api`
+  : "/api";
 
 export const API_ROOT_URL = API_BASE_URL.startsWith("/")
   ? (typeof window !== "undefined" ? window.location.origin : "")
-  : API_BASE_URL.replace(/\/api\/v1\/?$/, "");
+  : API_BASE_URL.replace(/\/api\/?$/, "");
 const TOKEN_KEY = "better_media_access_token";
 
 interface AuthResponse {
