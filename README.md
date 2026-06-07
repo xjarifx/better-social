@@ -1,4 +1,4 @@
-# Better Media
+# Better Social
 
 - **What is this project?** A full-stack social media platform with Twitter/X-like functionality — user profiles, posts and feeds, threaded comments, likes, follows, user blocking, and PRO subscription via Stripe. Built with Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, PostgreSQL (Prisma 7), JWT auth, and ImageKit CDN.
 

@@ -20,7 +20,7 @@ export async function uploadMedia(
   const result = await imagekit.files.upload({
     file: buffer.toString("base64"),
     fileName: file.name,
-    folder: "/better-media/posts",
+    folder: "/better-social/posts",
   });
   if (!result.url || !result.fileId) {
     throw new Error("ImageKit upload failed: missing url or fileId");

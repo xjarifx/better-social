@@ -13,9 +13,9 @@ jobs:
       postgres:
         image: postgres:17-alpine
         env:
-          POSTGRES_DB: better-media-test
-          POSTGRES_USER: better-media
-          POSTGRES_PASSWORD: better-media
+          POSTGRES_DB: better-social-test
+          POSTGRES_USER: better-social
+          POSTGRES_PASSWORD: better-social
         ports:
           - 5432:5432
         options: >-
@@ -42,7 +42,7 @@ jobs:
 
       - run: npm run test:ci
         env:
-          DATABASE_URL: postgresql://better-media:better-media@localhost:5432/better-media-test
+          DATABASE_URL: postgresql://better-social:better-social@localhost:5432/better-social-test
           JWT_SECRET: test-jwt-secret-for-ci
           STRIPE_SECRET_KEY: sk_test_placeholder
           IMAGEKIT_PUBLIC_KEY: placeholder
@@ -51,7 +51,7 @@ jobs:
 
       - run: npm run build
         env:
-          DATABASE_URL: postgresql://better-media:better-media@localhost:5432/better-media-test
+          DATABASE_URL: postgresql://better-social:better-social@localhost:5432/better-social-test
           JWT_SECRET: test-jwt-secret-for-ci
           STRIPE_SECRET_KEY: sk_test_placeholder
           IMAGEKIT_PUBLIC_KEY: placeholder

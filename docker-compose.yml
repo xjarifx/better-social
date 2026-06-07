@@ -2,15 +2,15 @@ services:
   db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: better-media
-      POSTGRES_USER: better-media
-      POSTGRES_PASSWORD: better-media
+      POSTGRES_DB: better-social
+      POSTGRES_USER: better-social
+      POSTGRES_PASSWORD: better-social
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U better-media"]
+      test: ["CMD-SHELL", "pg_isready -U better-social"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -20,7 +20,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgresql://better-media:better-media@db:5432/better-media
+      DATABASE_URL: postgresql://better-social:better-social@db:5432/better-social
       NODE_ENV: production
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-5m}

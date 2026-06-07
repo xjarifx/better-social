@@ -98,6 +98,6 @@ Paginated endpoints accept `limit` (default 20) and `offset` (default 0) and ret
 
 ## Image Upload
 
-- Provider: ImageKit CDN. Upload path: `/better-media/posts/`
+- Provider: ImageKit CDN. Upload path: `/better-social/posts/`
 - Sent as `multipart/form-data`, base64-encoded for ImageKit API
 - Requires `IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_URL_ENDPOINT`
