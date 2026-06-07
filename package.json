@@ -15,7 +15,12 @@
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
     "db:validate": "prisma validate",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ci": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@imagekit/nodejs": "^7.5.0",
@@ -45,19 +50,28 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4.1.18",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
     "cross-env": "^10.1.0",
     "dotenv": "^17.4.2",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.6",
+    "jsdom": "^29.1.1",
+    "msw": "^2.14.6",
     "prisma": "^7.8.0",
     "tailwindcss": "^4.1.18",
     "tsx": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.8",
+    "vitest-mock-extended": "^4.0.0"
   }
 }

@@ -40,6 +40,15 @@ jobs:
 
       - run: npm run lint
 
+      - run: npm run test:ci
+        env:
+          DATABASE_URL: postgresql://better-media:better-media@localhost:5432/better-media-test
+          JWT_SECRET: test-jwt-secret-for-ci
+          STRIPE_SECRET_KEY: sk_test_placeholder
+          IMAGEKIT_PUBLIC_KEY: placeholder
+          IMAGEKIT_PRIVATE_KEY: placeholder
+          IMAGEKIT_URL_ENDPOINT: https://ik.imagekit.io/placeholder
+
       - run: npm run build
         env:
           DATABASE_URL: postgresql://better-media:better-media@localhost:5432/better-media-test
